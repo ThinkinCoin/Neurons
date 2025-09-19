@@ -6,12 +6,13 @@ import {ERC20Capped} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20C
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
+import {ERC20Pausable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import {Errors} from "../libs/Errors.sol";
 
 /// @title Neurons ERC20 (capped, permit, role-gated mint)
 /// @notice Core token; mint is restricted to authorized minters (e.g., PoKMinter).
-contract Neurons is ERC20, ERC20Capped, ERC20Permit, Ownable, AccessControl, Pausable {
+contract Neurons is ERC20, ERC20Capped, ERC20Permit, ERC20Pausable, Ownable, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     uint256 public constant MAX_SUPPLY = 10_000_000 ether; // 10M with 18 decimals
@@ -137,18 +138,9 @@ contract Neurons is ERC20, ERC20Capped, ERC20Permit, Ownable, AccessControl, Pau
     // -------- Internal Overrides --------
     function _update(address from, address to, uint256 value)
         internal
-        override(ERC20, ERC20Pausable)
-        whenNotPaused
+        override(ERC20, ERC20Pausable, ERC20Capped)
     {
         super._update(from, to, value);
-    }
-
-    function _mint(address account, uint256 amount)
-        internal
-        override(ERC20, ERC20Capped)
-    {
-        // ERC20Capped::_mint will revert if cap exceeded
-        super._mint(account, amount);
     }
 
     function supportsInterface(bytes4 interfaceId)

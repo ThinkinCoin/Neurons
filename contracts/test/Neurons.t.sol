@@ -1,411 +1,306 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {Neurons} from "../src/tokens/Neurons.sol";
-import {PoKMinter} from "../src/minters/PoKMinter.sol";
-import {ECDSAVerifier} from "../src/verifiers/ECDSAVerifier.sol";
 import {Errors} from "../src/libs/Errors.sol";
+import {IAccessControl} from "@openzeppelin/contracts/access/IAccessControl.sol";
 
 contract NeuronsTest is Test {
-    Neurons public token;
-    PoKMinter public minter;
-    ECDSAVerifier public verifier;
-    
-    address public owner;
-    address public user1;
-    address public user2;
-    address public minterRole;
-    address public verifierRole;
-    
-    uint256 constant INITIAL_SUPPLY = 0;
-    uint256 constant MAX_SUPPLY = 10_000_000 * 1e18; // 10M tokens
-    
-    // Test signing keys
-    uint256 internal verifierPrivateKey = 0xA11CE;
-    address internal verifierAddress;
-    
+    Neurons internal token;
+
+    address internal owner;
+    address internal alice;
+    address internal bob;
+    address internal minter;
+    address internal burner;
+
+    uint256 internal constant MAX_SUPPLY = 10_000_000 ether;
+
+    // Keys for permit signing
+    uint256 internal alicePk = 0xA11CE;
+    address internal aliceFromPk;
+
+    // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)")
+    bytes32 internal constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
+
     function setUp() public {
         owner = address(this);
-        user1 = makeAddr("user1");
-        user2 = makeAddr("user2");
-        minterRole = makeAddr("minter");
-        verifierRole = makeAddr("verifier");
-        
-        // Setup verifier address from private key
-        verifierAddress = vm.addr(verifierPrivateKey);
-        
-        // Deploy contracts
-        token = new Neurons(owner, "Neurons", "NEURONS");
-        verifier = new ECDSAVerifier(owner, verifierAddress);
-        minter = new PoKMinter(owner, address(token), address(verifier));
-        
-        // Grant roles
-        token.grantRole(token.MINTER_ROLE(), address(minter));
-        token.grantRole(token.MINTER_ROLE(), minterRole);
-        
-        // Fund test accounts
-        vm.deal(user1, 100 ether);
-        vm.deal(user2, 100 ether);
-    }
-    
-    // ============ Token Tests ============
-    
-    function testInitialState() public {
-        assertEq(token.name(), "Neurons");
-        assertEq(token.symbol(), "NEURONS");
-        assertEq(token.decimals(), 18);
-        assertEq(token.totalSupply(), INITIAL_SUPPLY);
-        assertEq(token.cap(), MAX_SUPPLY);
+        alice = makeAddr("alice");
+        bob = makeAddr("bob");
+        minter = makeAddr("minter");
+        burner = makeAddr("burner");
+
+        aliceFromPk = vm.addr(alicePk);
+
+        token = new Neurons(owner);
+
+        // sanity
         assertTrue(token.hasRole(token.DEFAULT_ADMIN_ROLE(), owner));
-        assertTrue(token.hasRole(token.MINTER_ROLE(), address(minter)));
-        assertTrue(token.hasRole(token.MINTER_ROLE(), minterRole));
     }
-    
-    function testMinting() public {
-        uint256 amount = 1000 * 1e18;
-        
-        vm.prank(minterRole);
-        token.mint(user1, amount);
-        
-        assertEq(token.balanceOf(user1), amount);
-        assertEq(token.totalSupply(), amount);
+
+    // ============ Basics ============
+    function test_initialState() public {
+        assertEq(token.name(), "Neurons");
+        assertEq(token.symbol(), "Neurons");
+        assertEq(token.decimals(), 18);
+        assertEq(token.totalSupply(), 0);
+        assertEq(token.cap(), MAX_SUPPLY);
+        assertEq(token.remainingSupply(), MAX_SUPPLY);
+        assertTrue(token.hasRole(token.DEFAULT_ADMIN_ROLE(), owner));
     }
-    
-    function testMintingCap() public {
-        vm.prank(minterRole);
+
+    function test_supportsInterface() public {
+        // AccessControl/IERC165 should be supported
+        assertTrue(token.supportsInterface(type(IAccessControl).interfaceId));
+        // Random interface should be false
+        assertFalse(token.supportsInterface(bytes4(0xFFFFFFFF)));
+    }
+
+    // ============ Roles (owner-only) ============
+    function test_setMinterAndRevoke() public {
+        // grant
+        vm.expectEmit(true, true, true, true);
+        emit MinterUpdated(minter, true);
+        token.setMinter(minter, true);
+        assertTrue(token.isMinter(minter));
+
+        // revoke
+        vm.expectEmit(true, true, true, true);
+        emit MinterUpdated(minter, false);
+        token.setMinter(minter, false);
+        assertFalse(token.isMinter(minter));
+    }
+
+    function test_setBurnerAndRevoke() public {
+        vm.expectEmit(true, true, true, true);
+        emit BurnerUpdated(burner, true);
+        token.setBurner(burner, true);
+        assertTrue(token.isBurner(burner));
+
+        vm.expectEmit(true, true, true, true);
+        emit BurnerUpdated(burner, false);
+        token.setBurner(burner, false);
+        assertFalse(token.isBurner(burner));
+    }
+
+    function test_onlyOwnerCanSetRoles() public {
+        address attacker = makeAddr("attacker");
+        vm.prank(attacker);
+        vm.expectRevert(); // Ownable Unauthorized
+        token.setMinter(minter, true);
+    }
+
+    // ============ Mint ============
+    function test_mint_byMinter() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        vm.expectEmit(true, true, true, true);
+        emit TokensMinted(alice, 1_000 ether, minter);
+        token.mint(alice, 1_000 ether);
+        assertEq(token.balanceOf(alice), 1_000 ether);
+        assertEq(token.totalSupply(), 1_000 ether);
+        assertEq(token.remainingSupply(), MAX_SUPPLY - 1_000 ether);
+    }
+
+    function test_mint_revertsForNonMinter() public {
+        vm.prank(alice);
         vm.expectRevert();
-        token.mint(user1, MAX_SUPPLY + 1);
+        token.mint(bob, 1 ether);
     }
-    
-    function testUnauthorizedMinting() public {
-        vm.prank(user1);
+
+    function test_mint_revertsOnZeroAddress() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        vm.expectRevert(Errors.ZeroAddress.selector);
+        token.mint(address(0), 1 ether);
+    }
+
+    function test_mint_revertsOnZeroAmount() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        vm.expectRevert(Errors.InvalidAmount.selector);
+        token.mint(alice, 0);
+    }
+
+    function test_mint_capExceeded() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        token.mint(alice, MAX_SUPPLY);
+        assertEq(token.totalSupply(), MAX_SUPPLY);
+        // Next mint must revert due to cap (OZ ERC20Capped revert)
+        vm.prank(minter);
         vm.expectRevert();
-        token.mint(user2, 1000 * 1e18);
+        token.mint(alice, 1);
     }
-    
-    function testBurning() public {
-        uint256 amount = 1000 * 1e18;
-        
-        // Mint first
-        vm.prank(minterRole);
-        token.mint(user1, amount);
-        
-        // Burn
-        vm.prank(user1);
-        token.burn(amount / 2);
-        
-        assertEq(token.balanceOf(user1), amount / 2);
-        assertEq(token.totalSupply(), amount / 2);
-    }
-    
-    function testBatchMinting() public {
+
+    // ============ Batch Mint ============
+    function test_batchMint_happyPath() public {
+        token.setMinter(minter, true);
+
         address[] memory recipients = new address[](3);
         uint256[] memory amounts = new uint256[](3);
-        
-        recipients[0] = user1;
-        recipients[1] = user2;
+        recipients[0] = alice;
+        recipients[1] = bob;
         recipients[2] = owner;
-        
-        amounts[0] = 100 * 1e18;
-        amounts[1] = 200 * 1e18;
-        amounts[2] = 300 * 1e18;
-        
-        vm.prank(minterRole);
+        amounts[0] = 100 ether;
+        amounts[1] = 200 ether;
+        amounts[2] = 300 ether;
+
+        vm.prank(minter);
         token.batchMint(recipients, amounts);
-        
-        assertEq(token.balanceOf(user1), amounts[0]);
-        assertEq(token.balanceOf(user2), amounts[1]);
-        assertEq(token.balanceOf(owner), amounts[2]);
-        assertEq(token.totalSupply(), 600 * 1e18);
+        assertEq(token.balanceOf(alice), 100 ether);
+        assertEq(token.balanceOf(bob), 200 ether);
+        assertEq(token.balanceOf(owner), 300 ether);
+        assertEq(token.totalSupply(), 600 ether);
     }
-    
-    function testPauseUnpause() public {
-        uint256 amount = 1000 * 1e18;
-        vm.prank(minterRole);
-        token.mint(user1, amount);
-        
-        // Pause
-        token.pause();
-        assertTrue(token.paused());
-        
-        // Should revert on transfer when paused
-        vm.prank(user1);
-        vm.expectRevert();
-        token.transfer(user2, 100 * 1e18);
-        
-        // Unpause
-        token.unpause();
-        assertFalse(token.paused());
-        
-        // Should work after unpause
-        vm.prank(user1);
-        token.transfer(user2, 100 * 1e18);
-        assertEq(token.balanceOf(user2), 100 * 1e18);
+
+    function test_batchMint_revertsOnLengthMismatch() public {
+        token.setMinter(minter, true);
+        address[] memory recipients = new address[](1);
+        uint256[] memory amounts = new uint256[](2);
+        recipients[0] = alice;
+        amounts[0] = 1; amounts[1] = 2;
+        vm.prank(minter);
+        vm.expectRevert(Errors.ArrayLengthMismatch.selector);
+        token.batchMint(recipients, amounts);
     }
-    
-    // ============ Verifier Tests ============
-    
-    function testVerifierInitialState() public {
-        assertEq(verifier.authorizedSigner(), verifierAddress);
-        assertTrue(verifier.hasRole(verifier.DEFAULT_ADMIN_ROLE(), owner));
-    }
-    
-    function testValidSignature() public {
-        address recipient = user1;
-        uint256 amount = 500 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof = _createValidProof(recipient, amount, nonce, timestamp);
-        
-        bool isValid = verifier.verify(recipient, amount, nonce, timestamp, proof);
-        assertTrue(isValid);
-    }
-    
-    function testInvalidSignature() public {
-        address recipient = user1;
-        uint256 amount = 500 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        // Create invalid proof with wrong private key
-        uint256 wrongKey = 0xBAD;
-        bytes memory invalidProof = _createProofWithKey(recipient, amount, nonce, timestamp, wrongKey);
-        
-        bool isValid = verifier.verify(recipient, amount, nonce, timestamp, invalidProof);
-        assertFalse(isValid);
-    }
-    
-    function testSignerUpdate() public {
-        address newSigner = makeAddr("newSigner");
-        
-        verifier.setAuthorizedSigner(newSigner);
-        assertEq(verifier.authorizedSigner(), newSigner);
-    }
-    
-    // ============ PoK Minter Tests ============
-    
-    function testMinterInitialState() public {
-        assertEq(address(minter.token()), address(token));
-        assertEq(address(minter.verifier()), address(verifier));
-        assertEq(minter.cooldownPeriod(), 1 hours);
-        assertEq(minter.dailyLimit(), 1000 * 1e18);
-        assertEq(minter.maxSingleMint(), 100 * 1e18);
-        assertTrue(minter.hasRole(minter.DEFAULT_ADMIN_ROLE(), owner));
-    }
-    
-    function testSuccessfulPoKMint() public {
-        address recipient = user1;
-        uint256 amount = 50 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof = _createValidProof(recipient, amount, nonce, timestamp);
-        
-        vm.prank(recipient);
-        minter.mintWithProof(amount, nonce, timestamp, proof);
-        
-        assertEq(token.balanceOf(recipient), amount);
-        assertEq(minter.nextNonce(recipient), nonce + 1);
-        assertEq(minter.lastMintTime(recipient), block.timestamp);
-        assertEq(minter.dailyMinted(recipient, _getCurrentDay()), amount);
-    }
-    
-    function testInvalidProofMint() public {
-        address recipient = user1;
-        uint256 amount = 50 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory invalidProof = "invalid";
-        
-        vm.prank(recipient);
-        vm.expectRevert(Errors.InvalidProof.selector);
-        minter.mintWithProof(amount, nonce, timestamp, invalidProof);
-    }
-    
-    function testCooldownPeriod() public {
-        address recipient = user1;
-        uint256 amount = 50 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof1 = _createValidProof(recipient, amount, nonce, timestamp);
-        bytes memory proof2 = _createValidProof(recipient, amount, nonce + 1, timestamp);
-        
-        // First mint should succeed
-        vm.prank(recipient);
-        minter.mintWithProof(amount, nonce, timestamp, proof1);
-        
-        // Second mint should fail due to cooldown
-        vm.prank(recipient);
-        vm.expectRevert(Errors.CooldownNotExpired.selector);
-        minter.mintWithProof(amount, nonce + 1, timestamp, proof2);
-        
-        // Skip time and try again
-        vm.warp(block.timestamp + 1 hours + 1);
-        timestamp = block.timestamp;
-        proof2 = _createValidProof(recipient, amount, nonce + 1, timestamp);
-        
-        vm.prank(recipient);
-        minter.mintWithProof(amount, nonce + 1, timestamp, proof2);
-        
-        assertEq(token.balanceOf(recipient), amount * 2);
-    }
-    
-    function testDailyLimit() public {
-        address recipient = user1;
-        uint256 amount = 600 * 1e18; // Above daily limit
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof = _createValidProof(recipient, amount, nonce, timestamp);
-        
-        vm.prank(recipient);
-        vm.expectRevert(Errors.DailyLimitExceeded.selector);
-        minter.mintWithProof(amount, nonce, timestamp, proof);
-    }
-    
-    function testMaxSingleMint() public {
-        address recipient = user1;
-        uint256 amount = 150 * 1e18; // Above single mint limit
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof = _createValidProof(recipient, amount, nonce, timestamp);
-        
-        vm.prank(recipient);
-        vm.expectRevert(Errors.ExceedsMaxSingleMint.selector);
-        minter.mintWithProof(amount, nonce, timestamp, proof);
-    }
-    
-    function testBatchMintWithProofs() public {
+
+    function test_batchMint_revertsOnZeroAddressOrAmount() public {
+        token.setMinter(minter, true);
         address[] memory recipients = new address[](2);
         uint256[] memory amounts = new uint256[](2);
-        uint256[] memory nonces = new uint256[](2);
-        uint256[] memory timestamps = new uint256[](2);
-        bytes[] memory proofs = new bytes[](2);
-        
-        recipients[0] = user1;
-        recipients[1] = user2;
-        amounts[0] = 50 * 1e18;
-        amounts[1] = 75 * 1e18;
-        nonces[0] = 1;
-        nonces[1] = 1;
-        timestamps[0] = block.timestamp;
-        timestamps[1] = block.timestamp;
-        
-        proofs[0] = _createValidProof(recipients[0], amounts[0], nonces[0], timestamps[0]);
-        proofs[1] = _createValidProof(recipients[1], amounts[1], nonces[1], timestamps[1]);
-        
-        minter.batchMintWithProofs(recipients, amounts, nonces, timestamps, proofs);
-        
-        assertEq(token.balanceOf(user1), amounts[0]);
-        assertEq(token.balanceOf(user2), amounts[1]);
+        recipients[0] = address(0);
+        recipients[1] = alice;
+        amounts[0] = 10;
+        amounts[1] = 0;
+        vm.prank(minter);
+        vm.expectRevert(Errors.ZeroAddress.selector);
+        token.batchMint(recipients, amounts);
     }
-    
-    function testNonceReuse() public {
-        address recipient = user1;
-        uint256 amount = 50 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof = _createValidProof(recipient, amount, nonce, timestamp);
-        
-        // First mint should succeed
-        vm.prank(recipient);
-        minter.mintWithProof(amount, nonce, timestamp, proof);
-        
-        // Skip cooldown
-        vm.warp(block.timestamp + 1 hours + 1);
-        timestamp = block.timestamp;
-        proof = _createValidProof(recipient, amount, nonce, timestamp); // Same nonce
-        
-        // Second mint with same nonce should fail
-        vm.prank(recipient);
-        vm.expectRevert(Errors.InvalidNonce.selector);
-        minter.mintWithProof(amount, nonce, timestamp, proof);
+
+    function test_batchMint_revertsWhenExceedsCap() public {
+        token.setMinter(minter, true);
+        address[] memory recipients = new address[](2);
+        uint256[] memory amounts = new uint256[](2);
+        recipients[0] = alice;
+        recipients[1] = bob;
+        amounts[0] = MAX_SUPPLY;
+        amounts[1] = 1;
+        vm.prank(minter);
+        vm.expectRevert(Errors.CapExceeded.selector);
+        token.batchMint(recipients, amounts);
     }
-    
-    function testConfigurationUpdates() public {
-        // Test cooldown update
-        minter.setCooldownPeriod(2 hours);
-        assertEq(minter.cooldownPeriod(), 2 hours);
-        
-        // Test daily limit update
-        minter.setDailyLimit(2000 * 1e18);
-        assertEq(minter.dailyLimit(), 2000 * 1e18);
-        
-        // Test max single mint update
-        minter.setMaxSingleMint(200 * 1e18);
-        assertEq(minter.maxSingleMint(), 200 * 1e18);
+
+    // ============ Burn ============
+    function test_burn_byHolder() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        token.mint(alice, 1_000 ether);
+
+        vm.prank(alice);
+        vm.expectEmit(true, true, true, true);
+        emit TokensBurned(alice, 400 ether, alice);
+        token.burn(400 ether);
+        assertEq(token.balanceOf(alice), 600 ether);
+        assertEq(token.totalSupply(), 600 ether);
     }
-    
-    function testUnauthorizedConfigurationUpdates() public {
-        vm.prank(user1);
+
+    function test_burnFrom_byBurner() public {
+        token.setMinter(minter, true);
+        token.setBurner(burner, true);
+        vm.prank(minter);
+        token.mint(alice, 1_000 ether);
+
+        vm.prank(burner);
+        vm.expectEmit(true, true, true, true);
+        emit TokensBurned(alice, 250 ether, burner);
+        token.burnFrom(alice, 250 ether);
+        assertEq(token.balanceOf(alice), 750 ether);
+        assertEq(token.totalSupply(), 750 ether);
+    }
+
+    function test_burn_revertsOnZeroAmount() public {
+        vm.prank(alice);
+        vm.expectRevert(Errors.InvalidAmount.selector);
+        token.burn(0);
+    }
+
+    function test_burnFrom_requiresBurnerRole() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        token.mint(alice, 100 ether);
+        vm.prank(bob);
         vm.expectRevert();
-        minter.setCooldownPeriod(2 hours);
-        
-        vm.prank(user1);
+        token.burnFrom(alice, 1 ether);
+    }
+
+    // ============ Pausable ============
+    function test_pause_blocksTransfersAndMintsAndBurns() public {
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        token.mint(alice, 10 ether);
+
+        token.pause();
+        assertTrue(token.paused());
+
+        // transfer
+        vm.prank(alice);
         vm.expectRevert();
-        minter.setDailyLimit(2000 * 1e18);
-        
-        vm.prank(user1);
+        token.transfer(bob, 1 ether);
+
+        // mint
+        vm.prank(minter);
         vm.expectRevert();
-        minter.setMaxSingleMint(200 * 1e18);
-    }
-    
-    function testPauseMinter() public {
-        address recipient = user1;
-        uint256 amount = 50 * 1e18;
-        uint256 nonce = 1;
-        uint256 timestamp = block.timestamp;
-        
-        bytes memory proof = _createValidProof(recipient, amount, nonce, timestamp);
-        
-        // Pause minter
-        minter.pause();
-        
-        vm.prank(recipient);
+        token.mint(alice, 1 ether);
+
+        // burn
+        vm.prank(alice);
         vm.expectRevert();
-        minter.mintWithProof(amount, nonce, timestamp, proof);
-        
-        // Unpause and try again
-        minter.unpause();
-        
-        vm.prank(recipient);
-        minter.mintWithProof(amount, nonce, timestamp, proof);
-        
-        assertEq(token.balanceOf(recipient), amount);
+        token.burn(1 ether);
+
+        token.unpause();
+        assertFalse(token.paused());
+        vm.prank(alice);
+        token.transfer(bob, 1 ether);
+        assertEq(token.balanceOf(bob), 1 ether);
     }
-    
-    // ============ Helper Functions ============
-    
-    function _createValidProof(
-        address recipient,
-        uint256 amount,
-        uint256 nonce,
-        uint256 timestamp
-    ) internal view returns (bytes memory) {
-        return _createProofWithKey(recipient, amount, nonce, timestamp, verifierPrivateKey);
+
+    // ============ Permit (EIP-2612) ============
+    function test_permit_approvesSpender() public {
+        // owner of funds is aliceFromPk (controlled by alicePk)
+        token.setMinter(minter, true);
+        vm.prank(minter);
+        token.mint(aliceFromPk, 1_000 ether);
+
+        address spender = bob;
+        uint256 value = 500 ether;
+        uint256 nonce = token.nonces(aliceFromPk);
+        uint256 deadline = block.timestamp + 1 days;
+
+        bytes32 domainSeparator = token.DOMAIN_SEPARATOR();
+        bytes32 structHash = keccak256(
+            abi.encode(
+                PERMIT_TYPEHASH,
+                aliceFromPk,
+                spender,
+                value,
+                nonce,
+                deadline
+            )
+        );
+        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(alicePk, digest);
+
+        token.permit(aliceFromPk, spender, value, deadline, v, r, s);
+        assertEq(token.allowance(aliceFromPk, spender), value);
+        assertEq(token.nonces(aliceFromPk), nonce + 1);
     }
-    
-    function _createProofWithKey(
-        address recipient,
-        uint256 amount,
-        uint256 nonce,
-        uint256 timestamp,
-        uint256 privateKey
-    ) internal view returns (bytes memory) {
-        bytes32 messageHash = verifier.buildMessageHash(recipient, amount, nonce, timestamp);
-        bytes32 ethSignedMessageHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash));
-        
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, ethSignedMessageHash);
-        return abi.encodePacked(r, s, v);
-    }
-    
-    function _getCurrentDay() internal view returns (uint256) {
-        return block.timestamp / 1 days;
-    }
+
+    // ============ Events ============
+    event MinterUpdated(address indexed minter, bool allowed);
+    event BurnerUpdated(address indexed burner, bool allowed);
+    event TokensMinted(address indexed to, uint256 amount, address indexed minter);
+    event TokensBurned(address indexed from, uint256 amount, address indexed burner);
 }

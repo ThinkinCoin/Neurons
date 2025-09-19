@@ -7,13 +7,16 @@ import "solidity-coverage";
 import "dotenv/config";
 
 const config: HardhatUserConfig = {
+  paths: {
+    sources: "contracts/src",
+    tests: "test",
+    cache: "cache",
+    artifacts: "artifacts",
+  },
   solidity: {
-    version: "0.8.18",
+    version: "0.8.20",
     settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200,
-      },
+      optimizer: { enabled: true, runs: 200 },
     },
   },
   networks: {
@@ -45,6 +48,11 @@ const config: HardhatUserConfig = {
       chainId: 421614,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
+    harmonyTestnet: {
+      url: process.env.RPC_HARMONY_TESTNET || "https://api.s0.b.hmny.io",
+      chainId: 1666700000,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
   },
   etherscan: {
     apiKey: {
@@ -53,6 +61,7 @@ const config: HardhatUserConfig = {
       polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
       bscTestnet: process.env.BSCSCAN_API_KEY || "",
       arbitrumSepolia: process.env.ARBISCAN_API_KEY || "",
+      harmonyTestnet: process.env.HARMONYSCAN_API_KEY || "",
     },
   },
   gasReporter: {

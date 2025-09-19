@@ -11,6 +11,9 @@
     "deploy:sepolia": "npx hardhat run scripts/deploy.ts --network sepolia",
     "deploy:goerli": "npx hardhat run scripts/deploy.ts --network goerli",
     "deploy:polygon-mumbai": "npx hardhat run scripts/deploy.ts --network polygonMumbai",
+    "deploy:bsc-testnet": "npx hardhat run scripts/deploy.ts --network bscTestnet",
+    "deploy:arbitrum-sepolia": "npx hardhat run scripts/deploy.ts --network arbitrumSepolia",
+    "deploy:harmony-testnet": "npx hardhat run scripts/deploy.ts --network harmonyTestnet",
     "verify": "npx hardhat verify --network",
     "size": "npx hardhat size-contracts",
     "lint": "solhint 'contracts/**/*.sol'",
@@ -38,7 +41,7 @@
     "@types/node": "^20.0.0",
     "chai": "^4.3.0",
     "ethers": "^6.4.0",
-    "hardhat": "^2.19.0",
+    "hardhat": "^2.0.0",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.5",
@@ -47,8 +50,10 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@layerzerolabs/solidity-examples": "^2.0.0",
+    "@layerzerolabs/solidity-examples": "^1.1.0",
     "@openzeppelin/contracts": "^5.0.0",
-    "dotenv": "^16.3.0"
-  }
+    "dotenv": "^16.3.0",
+    "forge-std": "^1.1.2"
+  },
+  "packageManager": "pnpm@10.15.1+sha512.34e538c329b5553014ca8e8f4535997f96180a1d0f614339357449935350d924e22f8614682191264ec33d1462ac21561aff97f6bb18065351c162c7e8f6de67"
 }

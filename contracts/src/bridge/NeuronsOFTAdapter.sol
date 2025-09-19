@@ -8,8 +8,8 @@ pragma solidity ^0.8.18;
 
 // Minimal compile-safe stub to document integration points.
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {Errors} from "../libs/Errors.sol";
 import {Neurons} from "../tokens/Neurons.sol";
 
