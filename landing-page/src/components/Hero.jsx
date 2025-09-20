@@ -44,13 +44,10 @@ const Hero = () => {
   ]
 
   return (
-    <section className="hero">
-      <div 
-        className="container hero-container"
-        style={{
-          '--neurons-bg': `url(${neuronsBkg})`
-        }}
-      >
+    <section className="hero" style={{
+      '--neurons-bg': `url(${neuronsBkg})`
+    }}>
+      <div className="container hero-container">
         <motion.div
           className="hero-content"
           variants={containerVariants}
