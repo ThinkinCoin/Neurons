@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Menu, X, Brain } from 'lucide-react'
 import './Header.css'
+import "./logo.png"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,6 +24,9 @@ const Header = () => {
     setIsMenuOpen(false)
   }
 
+  const logo = require("./logo.png");
+
+
   const handleNavClick = (e, targetId) => {
     e.preventDefault()
     const target = document.querySelector(targetId)
@@ -36,7 +40,7 @@ const Header = () => {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <nav className="container nav">
         <a href="#" className="logo">
-          <Brain size={32} />
+          <logo size={32} />
           <span>Neurons Protocol</span>
         </a>
         
