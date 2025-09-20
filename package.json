@@ -4,6 +4,7 @@
   "description": "Neurons ERC20 token with Proof-of-Knowledge minting and LayerZero bridge",
   "main": "index.js",
   "scripts": {
+    "dev": "cd landing-page && npm run dev",
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
     "test:gas": "REPORT_GAS=true npx hardhat test",

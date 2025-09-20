@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Menu, X, Brain } from 'lucide-react'
 import './Header.css'
-import logo from '@/assets/Logo.png'
+import logo from '../assets/Logo.png'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
