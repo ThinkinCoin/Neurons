@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import './Hero.css'
+import neuronsBkg from '@/assets/neurons-bkg.png'
 
 const Hero = () => {
   const handleCTAClick = (e) => {
@@ -44,7 +45,12 @@ const Hero = () => {
 
   return (
     <section className="hero">
-      <div className="container">
+      <div 
+        className="container hero-container"
+        style={{
+          '--neurons-bg': `url(${neuronsBkg})`
+        }}
+      >
         <motion.div
           className="hero-content"
           variants={containerVariants}

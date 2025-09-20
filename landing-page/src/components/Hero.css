@@ -10,6 +10,32 @@
   overflow: hidden;
 }
 
+.hero-container {
+  background-image: var(--neurons-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  padding: 60px 40px;
+  backdrop-filter: blur(10px);
+  background-blend-mode: overlay;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hero-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(27, 67, 50, 0.8) 0%, rgba(45, 90, 61, 0.6) 100%);
+  border-radius: 20px;
+  z-index: -1;
+}
+
 .hero::before {
   content: '';
   position: absolute;
@@ -161,6 +187,10 @@
     padding: 80px 0 40px;
   }
   
+  .hero-container {
+    padding: 30px 20px;
+  }
+  
   .hero-title {
     font-size: 2.5rem;
     margin-bottom: 1rem;
@@ -173,5 +203,20 @@
   
   .hero-cta {
     margin-bottom: 1.5rem;
+  }
+}
+
+/* Additional responsive rules for hero-container */
+@media (max-width: 768px) {
+  .hero-container {
+    padding: 40px 30px;
+    margin: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-container {
+    padding: 30px 20px;
+    margin: 0 10px;
   }
 }

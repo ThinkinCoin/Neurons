@@ -10,7 +10,7 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-  base: '/',
+  base: '/landing-page/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
