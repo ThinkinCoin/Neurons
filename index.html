@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurons Protocol - Learn to Earn</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">🧠 Neurons Protocol</a>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#how-it-works" onclick="closeMobileMenu()">How it Works</a></li>
+                <li><a href="#features" onclick="closeMobileMenu()">Features</a></li>
+                <li><a href="#tokenomics" onclick="closeMobileMenu()">Tokenomics</a></li>
+                <li><a href="#faq" onclick="closeMobileMenu()">FAQ</a></li>
+                <li><a href="#docs" onclick="closeMobileMenu()">Docs</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="animate-fade-in">Learn to Earn</h1>
+            <p class="animate-fade-in">Get rewarded with NEURONS tokens for learning, completing challenges, and demonstrating knowledge on the blockchain</p>
+            <a href="#how-it-works" class="cta-button animate-fade-in">Start Learning & Earning</a>
+            
+            <div class="tech-stack">
+                <span class="tech-badge">ERC-20</span>
+                <span class="tech-badge">OpenZeppelin v5</span>
+                <span class="tech-badge">EIP-712</span>
+                <span class="tech-badge">LayerZero</span>
+                <span class="tech-badge">Solidity ^0.8.20</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="section">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="how-it-works">
+                <div class="step animate-fade-in">
+                    <div class="step-number">1</div>
+                    <h3>📚 Learn</h3>
+                    <p>Complete courses, quizzes, and AI-powered challenges on our Learn-to-Win platform</p>
+                </div>
+                <div class="step animate-fade-in">
+                    <div class="step-number">2</div>
+                    <h3>🔐 Prove</h3>
+                    <p>Our Proof-of-Knowledge system verifies your learning achievements cryptographically</p>
+                </div>
+                <div class="step animate-fade-in">
+                    <div class="step-number">3</div>
+                    <h3>💰 Earn</h3>
+                    <p>Receive NEURONS tokens automatically minted to your wallet as rewards</p>
+                </div>
+                <div class="step animate-fade-in">
+                    <div class="step-number">4</div>
+                    <h3>🌐 Use</h3>
+                    <p>Trade, transfer across chains, or hold your tokens for future platform features</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <div class="container">
+            <h2>Core Features</h2>
+            <div class="features">
+                <div class="feature animate-fade-in">
+                    <div class="feature-icon">🪙</div>
+                    <h3>NEURONS Token</h3>
+                    <p>ERC-20 token with 10M fixed supply, pausability, permit support, and role-based minting/burning controls</p>
+                </div>
+                <div class="feature animate-fade-in">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Proof-of-Knowledge</h3>
+                    <p>Cryptographic verification system using EIP-712 signatures to prove learning achievements and prevent fraud</p>
+                </div>
+                <div class="feature animate-fade-in">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Learn-to-Win Platform</h3>
+                    <p>Gamified learning experience with courses, challenges, AI tasks, and progressive difficulty levels</p>
+                </div>
+                <div class="feature animate-fade-in">
+                    <div class="feature-icon">🌉</div>
+                    <h3>Multi-Chain Bridge</h3>
+                    <p>LayerZero OFT adapter enables secure token transfers across multiple blockchains</p>
+                </div>
+                <div class="feature animate-fade-in">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Security First</h3>
+                    <p>Anti-fraud protections, rate limiting, cooldown periods, and emergency pause mechanisms</p>
+                </div>
+                <div class="feature animate-fade-in">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Gas Efficient</h3>
+                    <p>EIP-2612 permit support for gasless approvals and batch processing for optimal efficiency</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tokenomics" class="section">
+        <div class="container">
+            <h2>Tokenomics</h2>
+            <div class="stats">
+                <div class="stat animate-fade-in">
+                    <div class="stat-number">10M</div>
+                    <div class="stat-label">Max Supply</div>
+                </div>
+                <div class="stat animate-fade-in">
+                    <div class="stat-number">1000</div>
+                    <div class="stat-label">Daily Limit per User</div>
+                </div>
+                <div class="stat animate-fade-in">
+                    <div class="stat-number">100</div>
+                    <div class="stat-label">Max Single Reward</div>
+                </div>
+                <div class="stat animate-fade-in">
+                    <div class="stat-number">1h</div>
+                    <div class="stat-label">Cooldown Period</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem;">
+                <h3 style="color: white; text-align: center; margin-bottom: 2rem;">Reward Model</h3>
+                <div class="features">
+                    <div class="feature animate-fade-in">
+                        <h3>Difficulty-Based</h3>
+                        <p>Harder tasks and more complex challenges offer higher token rewards</p>
+                    </div>
+                    <div class="feature animate-fade-in">
+                        <h3>Consistency Bonuses</h3>
+                        <p>Daily learning streaks unlock multipliers and bonus rewards</p>
+                    </div>
+                    <div class="feature animate-fade-in">
+                        <h3>Quality Scores</h3>
+                        <p>Better performance and accuracy result in increased token rewards</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq animate-fade-in">
+                <h3 onclick="toggleFaq(this)">
+                    Is this a real cryptocurrency or just points?
+                    <span class="faq-toggle">+</span>
+                </h3>
+                <p style="display: none;">NEURONS are real cryptocurrency tokens that can be traded on exchanges and have monetary value. They're built as ERC-20 tokens on blockchain networks.</p>
+            </div>
+
+            <div class="faq animate-fade-in">
+                <h3 onclick="toggleFaq(this)">
+                    How do I know my learning is being tracked fairly?
+                    <span class="faq-toggle">+</span>
+                </h3>
+                <p style="display: none;">All proofs are cryptographically signed using EIP-712 standards and verified on blockchain, making fraud nearly impossible. The verification process is transparent and immutable.</p>
+            </div>
+
+            <div class="faq animate-fade-in">
+                <h3 onclick="toggleFaq(this)">
+                    What if I don't understand blockchain technology?
+                    <span class="faq-toggle">+</span>
+                </h3>
+                <p style="display: none;">You don't need to! The platform handles all the technical details. Just connect a crypto wallet (like MetaMask), learn, and earn. The blockchain works behind the scenes.</p>
+            </div>
+
+            <div class="faq animate-fade-in">
+                <h3 onclick="toggleFaq(this)">
+                    Are there fees for receiving tokens?
+                    <span class="faq-toggle">+</span>
+                </h3>
+                <p style="display: none;">The platform covers gas fees for reward distribution. You only pay network fees when transferring tokens yourself to other wallets or exchanges.</p>
+            </div>
+
+            <div class="faq animate-fade-in">
+                <h3 onclick="toggleFaq(this)">
+                    Can I use this on mobile?
+                    <span class="faq-toggle">+</span>
+                </h3>
+                <p style="display: none;">Yes! The platform works on mobile browsers with supported crypto wallets. You can learn and earn on the go.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="docs" class="section">
+        <div class="container">
+            <h2>Technical Documentation</h2>
+            <div class="features">
+                <div class="feature animate-fade-in">
+                    <h3>📖 Protocol Overview</h3>
+                    <p>Simple explanation of how Neurons Protocol works for general public</p>
+                    <a href="docs/en/overview.md" style="color: #95d5b2;">Read Overview →</a>
+                </div>
+                <div class="feature animate-fade-in">
+                    <h3>🪙 Token Specification</h3>
+                    <p>ERC-20 token technical specification for developers</p>
+                    <a href="docs/en/token.md" style="color: #95d5b2;">View Token Docs →</a>
+                </div>
+                <div class="feature animate-fade-in">
+                    <h3>🔐 Proof-of-Knowledge</h3>
+                    <p>PoK system architecture and implementation details</p>
+                    <a href="docs/en/pok.md" style="color: #95d5b2;">Explore PoK →</a>
+                </div>
+                <div class="feature animate-fade-in">
+                    <h3>🎯 Learn-to-Win</h3>
+                    <p>L2W platform architecture and user flows</p>
+                    <a href="docs/en/l2w.md" style="color: #95d5b2;">See L2W Docs →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">GitHub</a>
+                <a href="#">Discord</a>
+                <a href="#">Twitter</a>
+                <a href="#">Documentation</a>
+                <a href="#">Whitepaper</a>
+            </div>
+            <p>&copy; 2025 Neurons Protocol. Built with 🧠 for the future of learning.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFaq(element) {
+            const content = element.nextElementSibling;
+            const toggle = element.querySelector('.faq-toggle');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggle.textContent = '−';
+            } else {
+                content.style.display = 'none';
+                toggle.textContent = '+';
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.remove('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('nav-links');
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            const nav = document.querySelector('nav');
+            
+            if (!nav.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close mobile menu on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                const navLinks = document.getElementById('nav-links');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = `${Math.random() * 0.5}s`;
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements that should animate
+        document.querySelectorAll('.step, .feature, .stat, .faq').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Improve touch scrolling performance
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        document.addEventListener('touchmove', function() {}, {passive: true});
+    </script>
+</body>
+</html>
