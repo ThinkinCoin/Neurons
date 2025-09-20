@@ -1,0 +1,188 @@
+.documentation-section {
+  padding: 100px 0;
+  background: var(--background-color);
+}
+
+.documentation-content {
+  margin-top: 60px;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.docs-subtitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.doc-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 30px;
+  border-radius: 15px;
+  border: 1px solid rgba(82, 183, 136, 0.2);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.doc-card:hover {
+  border-color: rgba(82, 183, 136, 0.4);
+  text-decoration: none;
+}
+
+.doc-content {
+  flex: 1;
+}
+
+.doc-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.doc-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.doc-arrow {
+  color: var(--primary-color);
+  margin-left: 20px;
+  transition: transform 0.3s ease;
+}
+
+.doc-card:hover .doc-arrow {
+  transform: translateX(5px);
+}
+
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resource-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  border-radius: 15px;
+  border: 1px solid rgba(82, 183, 136, 0.2);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.resource-card:hover {
+  border-color: rgba(82, 183, 136, 0.4);
+  text-decoration: none;
+}
+
+.resource-icon {
+  color: var(--primary-color);
+  background: linear-gradient(135deg, rgba(82, 183, 136, 0.1) 0%, rgba(149, 213, 178, 0.1) 100%);
+  padding: 15px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.resource-content {
+  flex: 1;
+}
+
+.resource-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.resource-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .docs-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .documentation-section {
+    padding: 60px 0;
+  }
+
+  .documentation-content {
+    margin-top: 40px;
+  }
+
+  .docs-subtitle {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .doc-card, .resource-card {
+    padding: 20px;
+  }
+
+  .doc-title {
+    font-size: 16px;
+  }
+
+  .doc-description, .resource-description {
+    font-size: 13px;
+  }
+
+  .resource-card {
+    gap: 15px;
+  }
+
+  .resource-icon {
+    padding: 12px;
+  }
+
+  .resource-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .doc-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .doc-arrow {
+    align-self: flex-end;
+    margin-left: 0;
+  }
+
+  .resource-card {
+    padding: 15px;
+  }
+}
