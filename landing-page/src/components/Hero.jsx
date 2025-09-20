@@ -44,9 +44,7 @@ const Hero = () => {
   ]
 
   return (
-    <section className="hero" style={{
-      '--neurons-bg': `url(${neuronsBkg})`
-    }}>
+    <section className="hero" style={{ 'background-image': `url(${neuronsBkg})` }}>
       <div className="container hero-container">
         <motion.div
           className="hero-content"

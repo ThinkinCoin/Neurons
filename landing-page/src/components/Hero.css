@@ -1,5 +1,4 @@
 .hero {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-light) 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -8,6 +7,14 @@
   padding: 120px 0 80px;
   position: relative;
   overflow: hidden;
+    background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed
+}
+
+.neuronsBkg {
+  background-image: url('../assets/neurons-bkg.png');
 }
 
 .hero-container {
@@ -51,15 +58,13 @@
 .hero-content {
   position: relative;
   z-index: 1;
+  padding: 40px;
 }
 
 .hero-title {
   font-size: 4rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  background: linear-gradient(45deg, var(--accent-medium), var(--accent-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1.2;
 }
@@ -75,9 +80,7 @@
 }
 
 .hero-description strong {
-  background: linear-gradient(45deg, var(--accent-medium), var(--accent-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+
   background-clip: text;
   font-weight: 600;
 }
@@ -94,7 +97,6 @@
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  max-width: 600px;
   margin: 0 auto;
 }
 
