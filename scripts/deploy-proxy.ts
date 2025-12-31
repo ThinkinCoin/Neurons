@@ -1,6 +1,25 @@
 import { ethers, network } from "hardhat";
 import { defaultDeploymentPath, upsertContract } from "./deployments";
 
+function optionalNumberEnv(name: string): number | undefined {
+  const raw = (process.env[name] || "").trim();
+  if (!raw) return undefined;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) throw new Error(`Invalid number for ${name}: ${raw}`);
+  return parsed;
+}
+
+function deployOverrides() {
+  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 6_000_000;
+  const gasPriceGwei = optionalNumberEnv("GAS_PRICE_GWEI") ?? 30;
+  const gasPrice = ethers.parseUnits(gasPriceGwei.toString(), "gwei");
+
+  return {
+    gasLimit,
+    gasPrice,
+  } as const;
+}
+
 function requireEnv(name: string): string {
   const value = (process.env[name] || "").trim();
   if (!value) throw new Error(`Missing env var ${name}`);
@@ -23,7 +42,7 @@ async function main() {
   console.log(`[deploy-proxy] bridge=${bridge}`);
 
   const factory = await ethers.getContractFactory("NeuronsProxy");
-  const proxy = await factory.deploy(owner, bridge);
+  const proxy = await factory.deploy(owner, bridge, deployOverrides());
   const deploymentTx = proxy.deploymentTransaction();
   if (!deploymentTx) throw new Error("Deployment transaction not found");
 

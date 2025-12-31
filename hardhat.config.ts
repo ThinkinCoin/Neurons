@@ -91,11 +91,13 @@ const config: HardhatUserConfig = {
       url: process.env.RPC_HARMONY_MAINNET || "https://api.harmony.one",
       chainId: 1666600000,
       accounts: getAccounts(),
+      gasPrice: 30_000_000_000,
     },
     harmonyTestnet: {
       url: process.env.RPC_HARMONY_TESTNET || "https://api.s0.b.hmny.io",
       chainId: 1666700000,
       accounts: getAccounts(),
+      gasPrice: 30_000_000_000,
     },
   },
   etherscan: {
