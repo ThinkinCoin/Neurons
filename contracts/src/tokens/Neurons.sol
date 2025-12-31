@@ -8,6 +8,7 @@ import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Vo
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ERC20Pausable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
 import {Errors} from "../libs/Errors.sol";
 
 /// @title Neurons ERC20 (capped, permit, role-gated mint)
@@ -156,5 +157,14 @@ contract Neurons is ERC20, ERC20Capped, ERC20Permit, ERC20Votes, ERC20Pausable, 
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function nonces(address owner)
+        public
+        view
+        override(ERC20Permit, Nonces)
+        returns (uint256)
+    {
+        return super.nonces(owner);
     }
 }

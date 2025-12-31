@@ -5,6 +5,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";
 import {Errors} from "../libs/Errors.sol";
 
 /// @title Neurons Proxy Token (remote chains)
@@ -66,5 +67,14 @@ contract NeuronsProxy is ERC20, ERC20Permit, ERC20Votes, Ownable {
         if (to != address(0) && delegates(to) == address(0)) {
             _delegate(to, to);
         }
+    }
+
+    function nonces(address owner)
+        public
+        view
+        override(ERC20Permit, Nonces)
+        returns (uint256)
+    {
+        return super.nonces(owner);
     }
 }
