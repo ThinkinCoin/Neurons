@@ -1,6 +1,2 @@
-runtimes:
-    - python@3.11.11
-    - go@1.22.3
 tools:
     - pylint@3.3.6
-    - revive@1.7.0

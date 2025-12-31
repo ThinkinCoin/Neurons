@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {Neurons} from "../tokens/Neurons.sol";
 import {IVerifier} from "../interfaces/IVerifier.sol";
 import {Errors} from "../libs/Errors.sol";
@@ -40,10 +40,8 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
     event MintedWithProof(address indexed beneficiary, address indexed treasury, uint256 amount, bytes32 indexed nonce);
     event LimitsUpdated(uint256 minCooldown, uint256 maxDailyMint, uint256 maxSingleMint);
 
-    constructor(address owner_, address token_, address verifier_, address daoTreasury_) {
+    constructor(address owner_, address token_, address verifier_, address daoTreasury_) Ownable(owner_) {
         if (owner_ == address(0)) revert Errors.ZeroAddress();
-
-        _transferOwnership(owner_);
         if (token_ != address(0)) {
             token = Neurons(token_);
             emit TokenSet(token_);

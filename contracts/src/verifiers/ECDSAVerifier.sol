@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -22,13 +22,12 @@ contract ECDSAVerifier is IVerifier, Ownable, EIP712 {
     event TrustedSignerUpdated(address indexed oldSigner, address indexed newSigner);
 
     constructor(address owner_, address trustedSigner_) 
+        Ownable(owner_)
         EIP712("NeuronsPoK", "1")
     {
         if (owner_ == address(0) || trustedSigner_ == address(0)) {
             revert Errors.ZeroAddress();
         }
-
-        _transferOwnership(owner_);
         
         trustedSigner = trustedSigner_;
     }

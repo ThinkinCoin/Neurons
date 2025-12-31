@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC20Capped} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
@@ -30,9 +30,9 @@ contract Neurons is ERC20, ERC20Capped, ERC20Permit, ERC20Votes, ERC20Pausable, 
         ERC20("Neurons", "Neurons")
         ERC20Capped(MAX_SUPPLY)
         ERC20Permit("Neurons")
+        Ownable(owner_)
     {
         if (owner_ == address(0)) revert Errors.ZeroAddress();
-        _transferOwnership(owner_);
         _grantRole(DEFAULT_ADMIN_ROLE, owner_);
     }
 
@@ -136,38 +136,17 @@ contract Neurons is ERC20, ERC20Capped, ERC20Permit, ERC20Votes, ERC20Pausable, 
     }
 
     // -------- Internal Overrides --------
-    function _beforeTokenTransfer(address from, address to, uint256 amount)
+    function _update(address from, address to, uint256 value)
         internal
-        override(ERC20, ERC20Pausable)
+        override(ERC20, ERC20Pausable, ERC20Capped, ERC20Votes)
     {
-        super._beforeTokenTransfer(from, to, amount);
-    }
-
-    function _afterTokenTransfer(address from, address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
-        super._afterTokenTransfer(from, to, amount);
+        super._update(from, to, value);
 
         // Auto self-delegation to make 1 token = 1 vote by default,
         // while still allowing explicit delegation to third parties.
         if (to != address(0) && delegates(to) == address(0)) {
             _delegate(to, to);
         }
-    }
-
-    function _mint(address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Capped, ERC20Votes)
-    {
-        super._mint(to, amount);
-    }
-
-    function _burn(address account, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
-        super._burn(account, amount);
     }
 
     function supportsInterface(bytes4 interfaceId)

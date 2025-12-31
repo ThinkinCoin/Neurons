@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@layerzerolabs/solidity-examples": "^1.1.0",
-    "@openzeppelin/contracts": "^4.9.6",
+    "@openzeppelin/contracts": "^5.4.0",
     "dotenv": "^16.3.0",
     "forge-std": "^1.1.2"
   },

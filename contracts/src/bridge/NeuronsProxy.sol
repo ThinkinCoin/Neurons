@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
@@ -24,9 +24,9 @@ contract NeuronsProxy is ERC20, ERC20Permit, ERC20Votes, Ownable {
     constructor(address owner_, address bridge_)
         ERC20("Neurons", "Neurons")
         ERC20Permit("Neurons")
+        Ownable(owner_)
     {
         if (owner_ == address(0) || bridge_ == address(0)) revert Errors.ZeroAddress();
-        _transferOwnership(owner_);
         bridge = bridge_;
         emit BridgeUpdated(address(0), bridge_);
     }
@@ -54,31 +54,17 @@ contract NeuronsProxy is ERC20, ERC20Permit, ERC20Votes, Ownable {
         _burn(from, amount);
     }
 
-    // -------- Internal Overrides (OZ4 Votes) --------
-    function _afterTokenTransfer(address from, address to, uint256 amount)
+    // -------- Internal Overrides (OZ5 Votes) --------
+    function _update(address from, address to, uint256 value)
         internal
         override(ERC20, ERC20Votes)
     {
-        super._afterTokenTransfer(from, to, amount);
+        super._update(from, to, value);
 
         // Same UX as canonical: default to 1 token = 1 vote,
         // while allowing explicit delegation to third parties.
         if (to != address(0) && delegates(to) == address(0)) {
             _delegate(to, to);
         }
-    }
-
-    function _mint(address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
-        super._mint(to, amount);
-    }
-
-    function _burn(address account, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
-        super._burn(account, amount);
     }
 }
