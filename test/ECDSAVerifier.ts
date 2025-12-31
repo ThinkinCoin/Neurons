@@ -18,8 +18,8 @@ describe("ECDSAVerifier", function () {
 
   it("constructor rejects zero addresses", async () => {
     const Verifier = await ethers.getContractFactory("ECDSAVerifier", owner);
-    await expect(Verifier.deploy(ZeroAddress, trustedSigner.address)).to.be.reverted;
-    await expect(Verifier.deploy(owner.address, ZeroAddress)).to.be.reverted;
+    await expect(Verifier.deploy(ethers.ZeroAddress, trustedSigner.address)).to.be.reverted;
+    await expect(Verifier.deploy(owner.address, ethers.ZeroAddress)).to.be.reverted;
   });
 
   it("initializes with trusted signer", async () => {
@@ -34,7 +34,7 @@ describe("ECDSAVerifier", function () {
   });
 
   it("setTrustedSigner rejects zero address", async () => {
-    await expect(verifier.connect(owner).setTrustedSigner(ZeroAddress)).to.be.reverted;
+    await expect(verifier.connect(owner).setTrustedSigner(ethers.ZeroAddress)).to.be.reverted;
   });
 
   it("exposes a domain separator", async () => {
