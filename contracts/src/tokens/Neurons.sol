@@ -136,6 +136,13 @@ contract Neurons is ERC20, ERC20Capped, ERC20Permit, ERC20Votes, ERC20Pausable, 
     }
 
     // -------- Internal Overrides --------
+    function _beforeTokenTransfer(address from, address to, uint256 amount)
+        internal
+        override(ERC20, ERC20Pausable)
+    {
+        super._beforeTokenTransfer(from, to, amount);
+    }
+
     function _afterTokenTransfer(address from, address to, uint256 amount)
         internal
         override(ERC20, ERC20Votes)
