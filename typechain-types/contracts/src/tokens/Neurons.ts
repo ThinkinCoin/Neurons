@@ -23,15 +23,15 @@ import type {
   TypedContractMethod,
 } from "../../../common";
 
-export declare namespace ERC20Votes {
-  export type CheckpointStruct = {
-    fromBlock: BigNumberish;
-    votes: BigNumberish;
+export declare namespace Checkpoints {
+  export type Checkpoint208Struct = {
+    _key: BigNumberish;
+    _value: BigNumberish;
   };
 
-  export type CheckpointStructOutput = [fromBlock: bigint, votes: bigint] & {
-    fromBlock: bigint;
-    votes: bigint;
+  export type Checkpoint208StructOutput = [_key: bigint, _value: bigint] & {
+    _key: bigint;
+    _value: bigint;
   };
 }
 
@@ -54,7 +54,6 @@ export interface NeuronsInterface extends Interface {
       | "checkpoints"
       | "clock"
       | "decimals"
-      | "decreaseAllowance"
       | "delegate"
       | "delegateBySig"
       | "delegates"
@@ -65,7 +64,6 @@ export interface NeuronsInterface extends Interface {
       | "getVotes"
       | "grantRole"
       | "hasRole"
-      | "increaseAllowance"
       | "isBurner"
       | "isMinter"
       | "mint"
@@ -165,10 +163,6 @@ export interface NeuronsInterface extends Interface {
   encodeFunctionData(functionFragment: "clock", values?: undefined): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "delegate",
     values: [AddressLike]
   ): string;
@@ -214,10 +208,6 @@ export interface NeuronsInterface extends Interface {
   encodeFunctionData(
     functionFragment: "hasRole",
     values: [BytesLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isBurner",
@@ -338,10 +328,6 @@ export interface NeuronsInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "clock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "delegateBySig",
@@ -367,10 +353,6 @@ export interface NeuronsInterface extends Interface {
   decodeFunctionResult(functionFragment: "getVotes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "isBurner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isMinter", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
@@ -484,18 +466,18 @@ export namespace DelegateChangedEvent {
 export namespace DelegateVotesChangedEvent {
   export type InputTuple = [
     delegate: AddressLike,
-    previousBalance: BigNumberish,
-    newBalance: BigNumberish
+    previousVotes: BigNumberish,
+    newVotes: BigNumberish
   ];
   export type OutputTuple = [
     delegate: string,
-    previousBalance: bigint,
-    newBalance: bigint
+    previousVotes: bigint,
+    newVotes: bigint
   ];
   export interface OutputObject {
     delegate: string;
-    previousBalance: bigint;
-    newBalance: bigint;
+    previousVotes: bigint;
+    newVotes: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -737,7 +719,7 @@ export interface Neurons extends BaseContract {
   >;
 
   approve: TypedContractMethod<
-    [spender: AddressLike, amount: BigNumberish],
+    [spender: AddressLike, value: BigNumberish],
     [boolean],
     "nonpayable"
   >;
@@ -762,19 +744,13 @@ export interface Neurons extends BaseContract {
 
   checkpoints: TypedContractMethod<
     [account: AddressLike, pos: BigNumberish],
-    [ERC20Votes.CheckpointStructOutput],
+    [Checkpoints.Checkpoint208StructOutput],
     "view"
   >;
 
   clock: TypedContractMethod<[], [bigint], "view">;
 
   decimals: TypedContractMethod<[], [bigint], "view">;
-
-  decreaseAllowance: TypedContractMethod<
-    [spender: AddressLike, subtractedValue: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
 
   delegate: TypedContractMethod<[delegatee: AddressLike], [void], "nonpayable">;
 
@@ -837,12 +813,6 @@ export interface Neurons extends BaseContract {
     "view"
   >;
 
-  increaseAllowance: TypedContractMethod<
-    [spender: AddressLike, addedValue: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
-
   isBurner: TypedContractMethod<[account: AddressLike], [boolean], "view">;
 
   isMinter: TypedContractMethod<[account: AddressLike], [boolean], "view">;
@@ -884,7 +854,7 @@ export interface Neurons extends BaseContract {
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   renounceRole: TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
+    [role: BytesLike, callerConfirmation: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -922,13 +892,13 @@ export interface Neurons extends BaseContract {
   totalSupply: TypedContractMethod<[], [bigint], "view">;
 
   transfer: TypedContractMethod<
-    [to: AddressLike, amount: BigNumberish],
+    [to: AddressLike, value: BigNumberish],
     [boolean],
     "nonpayable"
   >;
 
   transferFrom: TypedContractMethod<
-    [from: AddressLike, to: AddressLike, amount: BigNumberish],
+    [from: AddressLike, to: AddressLike, value: BigNumberish],
     [boolean],
     "nonpayable"
   >;
@@ -973,7 +943,7 @@ export interface Neurons extends BaseContract {
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
-    [spender: AddressLike, amount: BigNumberish],
+    [spender: AddressLike, value: BigNumberish],
     [boolean],
     "nonpayable"
   >;
@@ -1004,7 +974,7 @@ export interface Neurons extends BaseContract {
     nameOrSignature: "checkpoints"
   ): TypedContractMethod<
     [account: AddressLike, pos: BigNumberish],
-    [ERC20Votes.CheckpointStructOutput],
+    [Checkpoints.Checkpoint208StructOutput],
     "view"
   >;
   getFunction(
@@ -1013,13 +983,6 @@ export interface Neurons extends BaseContract {
   getFunction(
     nameOrSignature: "decimals"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "decreaseAllowance"
-  ): TypedContractMethod<
-    [spender: AddressLike, subtractedValue: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
   getFunction(
     nameOrSignature: "delegate"
   ): TypedContractMethod<[delegatee: AddressLike], [void], "nonpayable">;
@@ -1088,13 +1051,6 @@ export interface Neurons extends BaseContract {
     "view"
   >;
   getFunction(
-    nameOrSignature: "increaseAllowance"
-  ): TypedContractMethod<
-    [spender: AddressLike, addedValue: BigNumberish],
-    [boolean],
-    "nonpayable"
-  >;
-  getFunction(
     nameOrSignature: "isBurner"
   ): TypedContractMethod<[account: AddressLike], [boolean], "view">;
   getFunction(
@@ -1149,7 +1105,7 @@ export interface Neurons extends BaseContract {
   getFunction(
     nameOrSignature: "renounceRole"
   ): TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
+    [role: BytesLike, callerConfirmation: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -1192,14 +1148,14 @@ export interface Neurons extends BaseContract {
   getFunction(
     nameOrSignature: "transfer"
   ): TypedContractMethod<
-    [to: AddressLike, amount: BigNumberish],
+    [to: AddressLike, value: BigNumberish],
     [boolean],
     "nonpayable"
   >;
   getFunction(
     nameOrSignature: "transferFrom"
   ): TypedContractMethod<
-    [from: AddressLike, to: AddressLike, amount: BigNumberish],
+    [from: AddressLike, to: AddressLike, value: BigNumberish],
     [boolean],
     "nonpayable"
   >;

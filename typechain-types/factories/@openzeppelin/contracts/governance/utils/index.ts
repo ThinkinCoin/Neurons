@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { IVotes__factory } from "./IVotes__factory";
+export { Votes__factory } from "./Votes__factory";

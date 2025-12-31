@@ -121,18 +121,18 @@ export namespace DelegateChangedEvent {
 export namespace DelegateVotesChangedEvent {
   export type InputTuple = [
     delegate: AddressLike,
-    previousBalance: BigNumberish,
-    newBalance: BigNumberish
+    previousVotes: BigNumberish,
+    newVotes: BigNumberish
   ];
   export type OutputTuple = [
     delegate: string,
-    previousBalance: bigint,
-    newBalance: bigint
+    previousVotes: bigint,
+    newVotes: bigint
   ];
   export interface OutputObject {
     delegate: string;
-    previousBalance: bigint;
-    newBalance: bigint;
+    previousVotes: bigint;
+    newVotes: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;

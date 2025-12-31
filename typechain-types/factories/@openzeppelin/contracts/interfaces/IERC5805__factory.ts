@@ -10,6 +10,17 @@ import type {
 
 const _abi = [
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "expiry",
+        type: "uint256",
+      },
+    ],
+    name: "VotesExpiredSignature",
+    type: "error",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -46,13 +57,13 @@ const _abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "previousBalance",
+        name: "previousVotes",
         type: "uint256",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "newBalance",
+        name: "newVotes",
         type: "uint256",
       },
     ],
