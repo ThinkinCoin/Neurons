@@ -24,7 +24,7 @@ A modern, responsive landing page for NEURONS Protocol built with Vite + React a
 ## 📦 Installation
 
 ```bash
-# Install dependencies
+# Install dependencies 
 npm install
 
 # Start development server
