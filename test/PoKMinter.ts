@@ -153,6 +153,35 @@ describe("PoKMinter", function () {
     expect(await minter.paused()).to.equal(false);
   });
 
+  it("setToken/setVerifier validate inputs and update", async () => {
+    await expect(minter.connect(alice).setToken(await token.getAddress())).to.be.reverted;
+    await expect(minter.setToken(ZeroAddress)).to.be.reverted;
+
+    const Token2 = await ethers.getContractFactory("Neurons", owner);
+    const token2 = await Token2.deploy(owner.address);
+    await token2.waitForDeployment();
+
+    await minter.setToken(await token2.getAddress());
+    expect(await minter.token()).to.equal(await token2.getAddress());
+
+    await expect(minter.connect(alice).setVerifier(await verifier.getAddress())).to.be.reverted;
+    await expect(minter.setVerifier(ZeroAddress)).to.be.reverted;
+
+    const MockVerifier = await ethers.getContractFactory("MockVerifier", owner);
+    const verifier2 = await MockVerifier.deploy(0, owner.address);
+    await verifier2.waitForDeployment();
+
+    await minter.setVerifier(await verifier2.getAddress());
+    expect(await minter.verifier()).to.equal(await verifier2.getAddress());
+  });
+
+  it("emergencySetNonceUsed toggles nonce state", async () => {
+    const nonce = ethers.keccak256(ethers.toUtf8Bytes("emergency-nonce"));
+    expect(await minter.nonceUsed(nonce)).to.equal(false);
+    await minter.emergencySetNonceUsed(nonce, true);
+    expect(await minter.nonceUsed(nonce)).to.equal(true);
+  });
+
   it("view helpers behave", async () => {
     await minter.setLimits(0, ethers.parseEther("5"), ethers.parseEther("2"));
 
@@ -171,5 +200,20 @@ describe("PoKMinter", function () {
     expect(stats.totalMints).to.equal(1n);
     expect(stats.totalMinted).to.equal(ethers.parseEther("2"));
     expect(stats.averageMintSize).to.equal(ethers.parseEther("2"));
+  });
+
+  it("canMint is false when paused", async () => {
+    await minter.pause();
+    expect(await minter.canMint(alice.address, ethers.parseEther("1"))).to.equal(false);
+  });
+
+  it("covers remaining MockVerifier helpers", async () => {
+    await verifier.setTrustedSigner(alice.address);
+    expect(await verifier.trustedSigner()).to.equal(alice.address);
+
+    expect(await verifier.domainSeparator()).to.equal("0x" + "00".repeat(32));
+    expect(await verifier.buildMessageHash(alice.address, 1, ethers.ZeroHash, 1)).to.equal(
+      "0x" + "00".repeat(32)
+    );
   });
 });

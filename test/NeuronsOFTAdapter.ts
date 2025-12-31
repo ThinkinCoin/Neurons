@@ -67,6 +67,12 @@ describe("NeuronsOFTAdapter (stub)", function () {
     await expect(adapter.connect(alice).sendTokens(101, bob.address, 1, "0x")).to.be.reverted;
   });
 
+  it("estimateSendFee returns placeholder fees", async () => {
+    const [nativeFee, zroFee] = await adapter.estimateSendFee(101, bob.address, 123, false, "0x");
+    expect(nativeFee).to.equal(ethers.parseEther("0.001"));
+    expect(zroFee).to.equal(0n);
+  });
+
   it("sendTokens burn/mint mode burns from sender and updates stats", async () => {
     const dst = 101;
     await adapter.allowRemote(dst, true);
@@ -99,6 +105,18 @@ describe("NeuronsOFTAdapter (stub)", function () {
 
     expect(await token.balanceOf(alice.address)).to.equal(ethers.parseEther("3"));
     expect(await token.balanceOf(await adapter.getAddress())).to.equal(ethers.parseEther("2"));
+  });
+
+  it("pause blocks sendTokens", async () => {
+    const dst = 103;
+    await adapter.allowRemote(dst, true);
+    await adapter.setEndpoint(owner.address);
+
+    await token.mint(alice.address, ethers.parseEther("1"));
+    await token.connect(alice).approve(await adapter.getAddress(), ethers.parseEther("1"));
+
+    await adapter.pause();
+    await expect(adapter.connect(alice).sendTokens(dst, bob.address, ethers.parseEther("1"), "0x")).to.be.reverted;
   });
 
   it("receiveTokens burn/mint mode mints to recipient and updates stats", async () => {
