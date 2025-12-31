@@ -5,5 +5,6 @@ export * as bridge from "./bridge";
 export * as interfaces from "./interfaces";
 export * as libs from "./libs";
 export * as minters from "./minters";
+export * as mocks from "./mocks";
 export * as tokens from "./tokens";
 export * as verifiers from "./verifiers";

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for interfaces/IVerifier.sol</title>
+    <title>Code coverage report for mocks/MockVerifier.sol</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -16,32 +16,32 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../index.html">all files</a> / <a href="index.html">interfaces/</a> IVerifier.sol
+      <a href="../index.html">all files</a> / <a href="index.html">mocks/</a> MockVerifier.sol
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">66.67% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>4/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>4/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>3/6</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">66.67% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>6/9</span>
       </div>
     </div>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -78,7 +78,26 @@
 33
 34
 35
-36</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -96,6 +115,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -104,6 +129,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -111,44 +147,65 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.20;
 &nbsp;
-/// @notice Generic PoK/AI workload verifier interface.
-/// @dev Implementations may be ECDSA, zk, oracles, or multi-validators.
-interface IVerifier {
-    /// @dev MUST revert if proof is invalid. Should be pure/view where possible.
-    /// @param recipient beneficiary of mint
-    /// @param amount    tokens to mint (18 decimals)
-    /// @param proof     opaque blob (abi-encoded per verifier)
-    /// @param nonce     unique nonce to avoid replay
-    /// @return ok       true if valid (optional, can just revert on failure)
+import {IVerifier} from "../interfaces/IVerifier.sol";
+&nbsp;
+contract MockVerifier is IVerifier {
+    enum Mode {
+        ReturnTrue,
+        ReturnFalse,
+        Revert
+    }
+&nbsp;
+    Mode public mode;
+    address public override trustedSigner;
+&nbsp;
+    error MockReverted();
+&nbsp;
+    constructor(Mode mode_, address trustedSigner_) {
+        mode = mode_;
+        trustedSigner = trustedSigner_;
+    }
+&nbsp;
+    function setMode(Mode mode_) external {
+        mode = mode_;
+    }
+&nbsp;
     function verify(
-        address recipient,
-        uint256 amount,
-        bytes calldata proof,
-        bytes32 nonce
-    ) external view returns (bool ok);
-    
-    /// @dev Returns the trusted signer address (for ECDSA implementations)
-    function trustedSigner() external view returns (address);
-    
-    /// @dev Updates the trusted signer (admin only)
-    function setTrustedSigner(address newSigner) external;
-    
-    /// @dev Returns domain separator for EIP-712 (if applicable)
-    function domainSeparator() external view returns (bytes32);
-    
-    /// @dev Helper to build message hash for off-chain signing
-    function buildMessageHash(
-        address recipient,
-        uint256 amount,
-        bytes32 nonce,
-        uint256 expiry
-    ) external view returns (bytes32);
-}</pre></td></tr>
+        address,
+        uint256,
+        bytes calldata,
+        bytes32
+    ) external view override returns (bool ok) {
+        if (mode == Mode.Revert) revert MockReverted();
+        if (mode == Mode.ReturnFalse) return false;
+        return true;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setTrustedSigner(address newSigner) external override {</span>
+        trustedSigner = newSigner;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function domainSeparator() external pure override returns (bytes32) {</span>
+<span class="cstat-no" title="statement not covered" >        return bytes32(0);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function buildMessageHash(</span>
+        address,
+        uint256,
+        bytes32,
+        uint256
+    ) external pure override returns (bytes32) {
+<span class="cstat-no" title="statement not covered" >        return bytes32(0);</span>
+    }
+}
+&nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->

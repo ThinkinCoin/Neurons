@@ -9,6 +9,8 @@ import type * as libs from "./libs";
 export type { libs };
 import type * as minters from "./minters";
 export type { minters };
+import type * as mocks from "./mocks";
+export type { mocks };
 import type * as tokens from "./tokens";
 export type { tokens };
 import type * as verifiers from "./verifiers";

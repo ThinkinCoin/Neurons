@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">28.57% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/14</span>
+        <span class='fraction'>4/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">25% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/12</span>
+        <span class='fraction'>3/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">29.41% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/17</span>
+        <span class='fraction'>5/17</span>
       </div>
     </div>
   </div>
@@ -219,7 +219,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -235,19 +235,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -257,7 +247,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
@@ -340,12 +340,12 @@ contract ECDSAVerifier is IVerifier, Ownable, EIP712 {
 <span class="cstat-no" title="statement not covered" >        bytes32 messageHash = _hashTypedDataV4(structHash);</span>
         
         // Recover signer
-<span class="cstat-no" title="statement not covered" >        address signer = messageHash.recover(signature);</span>
+        address signer = messageHash.recover(signature);
         
         // Verify signer
-<span class="cstat-no" title="statement not covered" >        if (signer != trustedSigner) revert Errors.InvalidSignature();</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (signer != trustedSigner) revert Errors.InvalidSignature();</span>
         
-<span class="cstat-no" title="statement not covered" >        return true;</span>
+        return true;
     }
 &nbsp;
     /// @dev Helper to build message hash for off-chain signing
@@ -355,7 +355,7 @@ contract ECDSAVerifier is IVerifier, Ownable, EIP712 {
         bytes32 nonce,
         uint256 expiry
     ) external view override returns (bytes32) {
-<span class="cstat-no" title="statement not covered" >        bytes32 structHash = keccak256(</span>
+        bytes32 structHash = keccak256(
             abi.encode(
                 MINT_TYPEHASH,
                 recipient,
@@ -365,7 +365,7 @@ contract ECDSAVerifier is IVerifier, Ownable, EIP712 {
             )
         );
         
-<span class="cstat-no" title="statement not covered" >        return _hashTypedDataV4(structHash);</span>
+        return _hashTypedDataV4(structHash);
     }
 }</pre></td></tr>
 </table></pre>
@@ -373,7 +373,7 @@ contract ECDSAVerifier is IVerifier, Ownable, EIP712 {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 31 2025 08:33:41 GMT-0300 (Brasilia Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 31 2025 09:02:37 GMT-0300 (Brasilia Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

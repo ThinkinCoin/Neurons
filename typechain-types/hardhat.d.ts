@@ -158,6 +158,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PoKMinter__factory>;
     getContractFactory(
+      name: "MockVerifier",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockVerifier__factory>;
+    getContractFactory(
+      name: "NeuronsOFTAdapterHarness",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.NeuronsOFTAdapterHarness__factory>;
+    getContractFactory(
       name: "Neurons",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Neurons__factory>;
@@ -347,6 +355,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.PoKMinter>;
     getContractAt(
+      name: "MockVerifier",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockVerifier>;
+    getContractAt(
+      name: "NeuronsOFTAdapterHarness",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.NeuronsOFTAdapterHarness>;
+    getContractAt(
       name: "Neurons",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -502,6 +520,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.PoKMinter>;
     deployContract(
+      name: "MockVerifier",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockVerifier>;
+    deployContract(
+      name: "NeuronsOFTAdapterHarness",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.NeuronsOFTAdapterHarness>;
+    deployContract(
       name: "Neurons",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Neurons>;
@@ -690,6 +716,16 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.PoKMinter>;
+    deployContract(
+      name: "MockVerifier",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockVerifier>;
+    deployContract(
+      name: "NeuronsOFTAdapterHarness",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.NeuronsOFTAdapterHarness>;
     deployContract(
       name: "Neurons",
       args: any[],
