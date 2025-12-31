@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for minters/PoKMinter.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">minters/</a> PoKMinter.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">98.44% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>63/64</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>66/100</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>14/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">98.91% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>91/92</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+&nbsp;
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Neurons} from "../tokens/Neurons.sol";
+import {IVerifier} from "../interfaces/IVerifier.sol";
+import {Errors} from "../libs/Errors.sol";
+&nbsp;
+/// @title PoK Minter
+/// @notice Mints Neurons upon successful Proof-of-Knowledge / AI workload verification.
+contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
+    Neurons public token;
+    IVerifier public verifier;
+&nbsp;
+    // DAO treasury that receives minted tokens
+    address public daoTreasury;
+&nbsp;
+    // Prevent proof replay; scope by nonce
+    mapping(bytes32 =&gt; bool) public nonceUsed;
+    
+    // Rate limiting per user
+    mapping(address =&gt; uint256) public lastMintTime;
+    mapping(address =&gt; uint256) public dailyMintAmount;
+    mapping(address =&gt; uint256) public lastMintDay;
+    
+    // Limits
+    uint256 public minCooldown = 1 hours; // Minimum time between mints
+    uint256 public maxDailyMint = 1000 ether; // Max tokens per day per user
+    uint256 public maxSingleMint = 100 ether; // Max tokens per single mint
+&nbsp;
+    // Analytics
+    uint256 public totalMintsProcessed;
+    uint256 public totalTokensMinted;
+&nbsp;
+    event TokenSet(address indexed token);
+    event VerifierSet(address indexed verifier);
+    event DaoTreasuryUpdated(address indexed oldTreasury, address indexed newTreasury);
+    event MintedWithProof(address indexed beneficiary, address indexed treasury, uint256 amount, bytes32 indexed nonce);
+    event LimitsUpdated(uint256 minCooldown, uint256 maxDailyMint, uint256 maxSingleMint);
+&nbsp;
+    constructor(address owner_, address token_, address verifier_, address daoTreasury_) Ownable(owner_) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (owner_ == address(0)) revert Errors.ZeroAddress();
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (token_ != address(0)) {
+            token = Neurons(token_);
+            emit TokenSet(token_);
+        }
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (verifier_ != address(0)) {
+            verifier = IVerifier(verifier_);
+            emit VerifierSet(verifier_);
+        }
+        if (daoTreasury_ == address(0)) revert Errors.ZeroAddress();
+        daoTreasury = daoTreasury_;
+        emit DaoTreasuryUpdated(address(0), daoTreasury_);
+    }
+&nbsp;
+    // -------- Admin --------
+    function setToken(address token_) external onlyOwner {
+        if (token_ == address(0)) revert Errors.ZeroAddress();
+        token = Neurons(token_);
+        emit TokenSet(token_);
+    }
+&nbsp;
+    function setVerifier(address verifier_) external onlyOwner {
+        if (verifier_ == address(0)) revert Errors.ZeroAddress();
+        verifier = IVerifier(verifier_);
+        emit VerifierSet(verifier_);
+    }
+&nbsp;
+    function setDaoTreasury(address daoTreasury_) external onlyOwner {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (daoTreasury_ == address(0)) revert Errors.ZeroAddress();
+        address old = daoTreasury;
+        daoTreasury = daoTreasury_;
+        emit DaoTreasuryUpdated(old, daoTreasury_);
+    }
+&nbsp;
+    function setLimits(
+        uint256 minCooldown_,
+        uint256 maxDailyMint_,
+        uint256 maxSingleMint_
+    ) external <span class="missing-if-branch" title="else path not taken" >E</span>onlyOwner {
+        minCooldown = minCooldown_;
+        maxDailyMint = maxDailyMint_;
+        maxSingleMint = maxSingleMint_;
+        emit LimitsUpdated(minCooldown_, maxDailyMint_, maxSingleMint_);
+    }
+&nbsp;
+    function pause() external onlyOwner { 
+        _pause(); 
+    }
+    
+    function unpause() external <span class="missing-if-branch" title="else path not taken" >E</span>onlyOwner { 
+        _unpause(); 
+    }
+&nbsp;
+    // -------- Emergency Functions --------
+    function emergencySetNonceUsed(bytes32 nonce, bool used) external <span class="missing-if-branch" title="else path not taken" >E</span>onlyOwner {
+        nonceUsed[nonce] = used;
+    }
+&nbsp;
+    // -------- Mint Flow --------
+    /// @dev Caller is expected to be a backend/orchestrator or public entry
+    function mintWithProof(
+        address beneficiary,
+        uint256 amount,
+        bytes calldata proof,
+        bytes32 nonce
+    ) external <span class="missing-if-branch" title="else path not taken" >E</span>whenNotPaused <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (address(token) == address(0)) revert Errors.ZeroAddress();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (address(verifier) == address(0)) revert Errors.VerifierNotSet();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (daoTreasury == address(0)) revert Errors.ZeroAddress();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (beneficiary == address(0)) revert Errors.ZeroAddress();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (amount == 0) revert Errors.InvalidAmount();
+        if (amount &gt; maxSingleMint) revert Errors.SingleMintLimitExceeded();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (nonceUsed[nonce]) revert Errors.AlreadyUsed();
+&nbsp;
+        // Rate limiting checks
+        if (block.timestamp &lt; lastMintTime[beneficiary] + minCooldown) {
+            revert Errors.CooldownNotMet();
+        }
+&nbsp;
+        // Daily limit check
+        uint256 currentDay = block.timestamp / 1 days;
+        if (lastMintDay[beneficiary] != currentDay) {
+            // Reset daily counter
+            dailyMintAmount[beneficiary] = 0;
+            lastMintDay[beneficiary] = currentDay;
+        }
+        
+        if (dailyMintAmount[beneficiary] + amount &gt; maxDailyMint) {
+            revert Errors.DailyLimitExceeded();
+        }
+&nbsp;
+        // 1) Validate proof (MUST REVERT on invalid)
+        bool ok = verifier.verify(beneficiary, amount, proof, nonce);
+        if (!ok) revert Errors.InvalidProof();
+&nbsp;
+        // 2) Mark nonce (anti-replay)
+        nonceUsed[nonce] = true;
+&nbsp;
+        // 3) Update rate limiting
+        lastMintTime[beneficiary] = block.timestamp;
+        dailyMintAmount[beneficiary] += amount;
+&nbsp;
+        // 4) Mint via role-gated token (PoKMinter MUST have MINTER_ROLE)
+        token.mint(daoTreasury, amount);
+&nbsp;
+        // 5) Update analytics
+        totalMintsProcessed++;
+        totalTokensMinted += amount;
+&nbsp;
+        emit MintedWithProof(beneficiary, daoTreasury, amount, nonce);
+    }
+&nbsp;
+    /// @dev Batch mint with multiple proofs (for efficiency)
+    function batchMintWithProofs(
+        address[] calldata recipients,
+        uint256[] calldata amounts,
+        bytes[] calldata proofs,
+        bytes32[] calldata nonces
+    ) external <span class="missing-if-branch" title="else path not taken" >E</span>whenNotPaused <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (recipients.length != amounts.length || 
+            amounts.length != proofs.length || 
+            proofs.length != nonces.length) {
+            revert Errors.ArrayLengthMismatch();
+        }
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (address(token) == address(0)) revert Errors.ZeroAddress();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (address(verifier) == address(0)) revert Errors.VerifierNotSet();
+&nbsp;
+        uint256 currentDay = block.timestamp / 1 days;
+&nbsp;
+        for (uint256 i = 0; i &lt; recipients.length; i++) {
+            address beneficiary = recipients[i];
+            uint256 amount = amounts[i];
+            bytes calldata proof = proofs[i];
+            bytes32 nonce = nonces[i];
+&nbsp;
+            if (beneficiary == address(0)) continue; // Skip invalid addresses
+            if (amount == 0 || <span class="branch-1 cbranch-no" title="branch not covered" >amount &gt; maxSingleMint</span>) continue; // Skip invalid amounts
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (nonceUsed[nonce]) continue; // Skip used nonces
+&nbsp;
+            // Rate limiting
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (block.timestamp &lt; lastMintTime[beneficiary] + minCooldown) continue; // Skip if too soon
+&nbsp;
+            // Daily limit check
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (lastMintDay[beneficiary] != currentDay) {
+                dailyMintAmount[beneficiary] = 0;
+                lastMintDay[beneficiary] = currentDay;
+            }
+            
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (dailyMintAmount[beneficiary] + amount &gt; maxDailyMint) continue; // Skip if exceeds daily limit
+&nbsp;
+            // Verify proof
+            try verifier.verify(beneficiary, amount, proof, nonce) returns (bool ok) {
+                if (!ok) continue; // Skip invalid proofs
+            } catch {
+                continue; // Skip if verification fails
+            }
+&nbsp;
+            // Mark nonce and update limits
+            nonceUsed[nonce] = true;
+            lastMintTime[beneficiary] = block.timestamp;
+            dailyMintAmount[beneficiary] += amount;
+&nbsp;
+            // Mint
+            token.mint(daoTreasury, amount);
+&nbsp;
+            // Update analytics
+            totalMintsProcessed++;
+            totalTokensMinted += amount;
+&nbsp;
+            emit MintedWithProof(beneficiary, daoTreasury, amount, nonce);
+        }
+    }
+&nbsp;
+    // -------- View Functions --------
+    function canMint(address user, uint256 amount) external view returns (bool) {
+        if (paused()) return false;
+        if (amount == 0 || amount &gt; maxSingleMint) return false;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (block.timestamp &lt; lastMintTime[user] + minCooldown) <span class="cstat-no" title="statement not covered" >return false;</span>
+&nbsp;
+        uint256 currentDay = block.timestamp / 1 days;
+        uint256 dailyAmount = lastMintDay[user] == currentDay ? <span class="missing-if-branch" title="if path not taken" >I</span>dailyMintAmount[user] : 0;
+        
+        return dailyAmount + amount &lt;= maxDailyMint;
+    }
+&nbsp;
+    function getRemainingDailyLimit(address user) external view returns (uint256) {
+        uint256 currentDay = block.timestamp / 1 days;
+        uint256 dailyAmount = lastMintDay[user] == currentDay ? dailyMintAmount[user] : <span class="missing-if-branch" title="else path not taken" >E</span>0;
+        
+        return dailyAmount &gt;= maxDailyMint ? <span class="missing-if-branch" title="if path not taken" >I</span>0 : maxDailyMint - dailyAmount;
+    }
+&nbsp;
+    function getNextMintTime(address user) external view returns (uint256) {
+        return lastMintTime[user] + minCooldown;
+    }
+&nbsp;
+    function getMintingStats() external view returns (
+        uint256 totalMints,
+        uint256 totalMinted,
+        uint256 averageMintSize
+    ) {
+        totalMints = totalMintsProcessed;
+        totalMinted = totalTokensMinted;
+        averageMintSize = totalMints &gt; 0 ? totalMinted / totalMints : <span class="missing-if-branch" title="else path not taken" >E</span>0;
+    }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 31 2025 09:18:51 GMT-0300 (Brasilia Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
