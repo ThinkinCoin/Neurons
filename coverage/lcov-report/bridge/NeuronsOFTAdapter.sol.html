@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for bridge/NeuronsOFTAdapter.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">bridge/</a> NeuronsOFTAdapter.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/48</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/15</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/54</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+&nbsp;
+// NOTE: This is a stub. Wire with LayerZero OFT (v2) in integration step.
+// Import the chosen OFT base and endpoint interfaces from the pinned LayerZero package.
+// Example (adjust to your package layout):
+// import {OFTV2} from "@layerzerolabs/solidity-examples/contracts/token/oft/v2/OFTV2.sol";
+&nbsp;
+// Minimal compile-safe stub to document integration points.
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Errors} from "../libs/Errors.sol";
+import {Neurons} from "../tokens/Neurons.sol";
+&nbsp;
+/// @title Neurons OFT Adapter (LayerZero)
+/// @notice Bridges Neurons across supported chains via LayerZero messaging.
+/// @dev Two common patterns: lock-and-mint OR burn-and-mint.
+contract NeuronsOFTAdapter is Ownable, Pausable, ReentrancyGuard {
+    Neurons public token;
+    address public endpoint; // LayerZero endpoint or OFT core, depending on chosen pattern
+    
+    // Chain configuration
+    mapping(uint16 =&gt; bool) public remoteChainAllowed; // lzChainId =&gt; allowed
+    mapping(uint16 =&gt; bytes) public trustedRemoteLookup; // lzChainId =&gt; trustedRemote
+    
+    // Bridge mode configuration
+    bool public isBurnMintMode; // true = burn/mint, false = lock/unlock
+    
+    // Statistics
+    uint256 public totalSent;
+    uint256 public totalReceived;
+    mapping(uint16 =&gt; uint256) public sentToChain;
+    mapping(uint16 =&gt; uint256) public receivedFromChain;
+&nbsp;
+    event EndpointSet(address endpoint);
+    event RemoteChainAllowed(uint16 indexed lzChainId, bool allowed);
+    event TrustedRemoteSet(uint16 indexed lzChainId, bytes trustedRemote);
+    event BridgeModeSet(bool isBurnMintMode);
+    event TokensSent(address indexed from, uint16 indexed dstChainId, address indexed to, uint256 amount);
+    event TokensReceived(address indexed to, uint16 indexed srcChainId, uint256 amount);
+&nbsp;
+<span class="fstat-no" title="function not covered" >    constructor(address owner_, address token_) Ownable(owner_) {</span>
+<span class="cstat-no" title="statement not covered" >        if (owner_ == address(0) || token_ == address(0)) revert Errors.ZeroAddress();</span>
+        token = Neurons(token_);
+        isBurnMintMode = true; // Default to burn/mint for simplicity
+    }
+&nbsp;
+    // -------- Admin Functions --------
+<span class="fstat-no" title="function not covered" >    function setEndpoint(address endpoint_) external onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        if (endpoint_ == address(0)) revert Errors.ZeroAddress();</span>
+        endpoint = endpoint_;
+<span class="cstat-no" title="statement not covered" >        emit EndpointSet(endpoint_);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function allowRemote(uint16 lzChainId, bool allowed) external onlyOwner {</span>
+        remoteChainAllowed[lzChainId] = allowed;
+<span class="cstat-no" title="statement not covered" >        emit RemoteChainAllowed(lzChainId, allowed);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setTrustedRemote(uint16 lzChainId, bytes calldata trustedRemote) external onlyOwner {</span>
+        trustedRemoteLookup[lzChainId] = trustedRemote;
+<span class="cstat-no" title="statement not covered" >        emit TrustedRemoteSet(lzChainId, trustedRemote);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function setBridgeMode(bool _isBurnMintMode) external onlyOwner {</span>
+        isBurnMintMode = _isBurnMintMode;
+<span class="cstat-no" title="statement not covered" >        emit BridgeModeSet(_isBurnMintMode);</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function pause() external onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        _pause()</span>;
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function unpause() external onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        _unpause()</span>;
+    }
+&nbsp;
+    // -------- Bridge Functions (Stubs) --------
+    
+    /// @dev Sends tokens to another chain
+    /// TODO: Integrate with LayerZero OFT
+<span class="fstat-no" title="function not covered" >    function sendTokens(</span>
+        uint16 dstChainId,
+        address to,
+        uint256 amount,
+        bytes calldata adapterParams
+    ) external payable whenNotPaused nonReentrant {
+<span class="cstat-no" title="statement not covered" >        if (!remoteChainAllowed[dstChainId]) revert Errors.BridgeNotAllowed();</span>
+<span class="cstat-no" title="statement not covered" >        if (to == address(0)) revert Errors.ZeroAddress();</span>
+<span class="cstat-no" title="statement not covered" >        if (amount == 0) revert Errors.InvalidAmount();</span>
+<span class="cstat-no" title="statement not covered" >        if (endpoint == address(0)) revert Errors.EndpointNotSet();</span>
+&nbsp;
+        // Check balance
+<span class="cstat-no" title="statement not covered" >        if (token.balanceOf(msg.sender) &lt; amount) revert Errors.InsufficientBalance();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (isBurnMintMode) {</span>
+            // Burn tokens on source chain
+<span class="cstat-no" title="statement not covered" >            token.burnFrom(msg.sender, amount)</span>;
+        } else {
+            // Lock tokens in adapter
+<span class="cstat-no" title="statement not covered" >            token.transferFrom(msg.sender, address(this), amount)</span>;
+        }
+&nbsp;
+        // Update statistics
+        totalSent += amount;
+        sentToChain[dstChainId] += amount;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit TokensSent(msg.sender, dstChainId, to, amount);</span>
+&nbsp;
+        // TODO: Implement LayerZero send logic
+        // _lzSend(dstChainId, payload, payable(msg.sender), address(0), adapterParams, msg.value);
+    }
+&nbsp;
+    /// @dev Estimates bridge fee
+    /// TODO: Integrate with LayerZero fee estimation
+<span class="fstat-no" title="function not covered" >    function estimateSendFee(</span>
+        uint16 dstChainId,
+        address to,
+        uint256 amount,
+        bool useZro,
+        bytes calldata adapterParams
+    ) external view returns (uint256 nativeFee, uint256 zroFee) {
+        // TODO: Implement LayerZero fee estimation
+        // return lzEndpoint.estimateFees(dstChainId, address(this), payload, useZro, adapterParams);
+        
+        // Placeholder
+        nativeFee = 0.001 ether; // Placeholder fee
+        zroFee = 0;
+        
+        // Suppress unused variable warnings
+        dstChainId;
+        to;
+        amount;
+        useZro;
+        adapterParams;
+    }
+&nbsp;
+    /// @dev Receives tokens from another chain
+    /// TODO: Implement LayerZero receive logic
+<span class="fstat-no" title="function not covered" >    function _receiveTokens(</span>
+        uint16 srcChainId,
+        address to,
+        uint256 amount
+    ) internal {
+<span class="cstat-no" title="statement not covered" >        if (!remoteChainAllowed[srcChainId]) revert Errors.BridgeNotAllowed();</span>
+<span class="cstat-no" title="statement not covered" >        if (to == address(0)) revert Errors.ZeroAddress();</span>
+<span class="cstat-no" title="statement not covered" >        if (amount == 0) revert Errors.InvalidAmount();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (isBurnMintMode) {</span>
+            // Mint tokens on destination chain
+<span class="cstat-no" title="statement not covered" >            token.mint(to, amount)</span>;
+        } else {
+            // Unlock tokens from adapter
+<span class="cstat-no" title="statement not covered" >            token.transfer(to, amount)</span>;
+        }
+&nbsp;
+        // Update statistics
+        totalReceived += amount;
+        receivedFromChain[srcChainId] += amount;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        emit TokensReceived(to, srcChainId, amount);</span>
+    }
+&nbsp;
+    // TODO: integrate send/receive logic:
+    // - lzReceive(...) / _nonblockingLzReceive(...) to mint/unlock on arrival
+    // - choose lock-mint vs burn-mint:
+    //   * lock-mint: hold tokens in adapter, mint wrapped on dst
+    //   * burn-mint: burn here, mint there (requires mint authority on dst)
+    // - ensure token.mint() authority is strictly controlled per chain
+&nbsp;
+    // Security TODOs:
+    // - Reentrancy guards ✅ (implemented)
+    // - Trusted remote validation (implement with setTrustedRemote)
+    // - Fee estimation and slippage guards for OFT
+&nbsp;
+    // -------- Emergency Functions --------
+    
+    /// @dev Emergency withdrawal for locked tokens (lock/unlock mode only)
+<span class="fstat-no" title="function not covered" >    function emergencyWithdraw(address to, uint256 amount) external onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        if (!isBurnMintMode) {</span>
+<span class="cstat-no" title="statement not covered" >            token.transfer(to, amount)</span>;
+        }
+    }
+&nbsp;
+    // -------- View Functions --------
+    
+<span class="fstat-no" title="function not covered" >    function getChainStats(uint16 chainId) external view returns (uint256 sent, uint256 received) {</span>
+        sent = sentToChain[chainId];
+        received = receivedFromChain[chainId];
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function isChainAllowed(uint16 chainId) external view returns (bool) {</span>
+<span class="cstat-no" title="statement not covered" >        return remoteChainAllowed[chainId];</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getTrustedRemote(uint16 chainId) external view returns (bytes memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return trustedRemoteLookup[chainId];</span>
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getBridgeStats() external view returns (</span>
+        uint256 totalTokensSent,
+        uint256 totalTokensReceived,
+        bool bridgeMode,
+        uint256 activeChains
+    ) {
+        totalTokensSent = totalSent;
+        totalTokensReceived = totalReceived;
+        bridgeMode = isBurnMintMode;
+        
+        // Count active chains
+        activeChains = 0;
+<span class="cstat-no" title="statement not covered" >        for (uint16 i = 1; i &lt;= 200; i++) { // Common LayerZero chain ID range</span>
+<span class="cstat-no" title="statement not covered" >            if (remoteChainAllowed[i]) {</span>
+                activeChains++;
+            }
+        }
+    }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 31 2025 08:33:41 GMT-0300 (Brasilia Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
