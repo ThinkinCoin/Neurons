@@ -84,6 +84,7 @@ describe("Neurons (ERC20)", function () {
 
       // Votes are enabled via ERC20Votes + auto self-delegation
       expect(await token.getVotes(alice.address)).to.equal(amount);
+      expect(await token.delegates(alice.address)).to.equal(alice.address);
     });
 
     it("reverts for non-minter", async () => {
@@ -233,6 +234,13 @@ describe("Neurons (ERC20)", function () {
       await token.setMinter(minter.address, true);
     });
 
+    it("exposes block-number clock mode", async () => {
+      // EIP-6372 compatibility: Aragon Token Voting expects snapshots by block.
+      expect(await token.clock()).to.equal(await ethers.provider.getBlockNumber());
+      const mode = await token.CLOCK_MODE();
+      expect(mode.toLowerCase()).to.contain("block");
+    });
+
     it("supports past votes and past total supply by block", async () => {
       const amount = ethers.parseEther("10");
       await token.connect(minter).mint(alice.address, amount);
@@ -254,6 +262,58 @@ describe("Neurons (ERC20)", function () {
       await token.connect(alice).delegate(bob.address);
       expect(await token.getVotes(alice.address)).to.equal(0n);
       expect(await token.getVotes(bob.address)).to.equal(amount);
+    });
+
+    it("does not override explicit delegation on later mints", async () => {
+      const amount1 = ethers.parseEther("10");
+      const amount2 = ethers.parseEther("7");
+
+      await token.connect(minter).mint(alice.address, amount1);
+      await token.connect(alice).delegate(bob.address);
+      expect(await token.delegates(alice.address)).to.equal(bob.address);
+      expect(await token.getVotes(bob.address)).to.equal(amount1);
+
+      await token.connect(minter).mint(alice.address, amount2);
+      // Votes should accrue to Bob, not revert to Alice.
+      expect(await token.delegates(alice.address)).to.equal(bob.address);
+      expect(await token.getVotes(bob.address)).to.equal(amount1 + amount2);
+      expect(await token.getVotes(alice.address)).to.equal(0n);
+    });
+
+    it("updates votes across transfers and exposes correct snapshots", async () => {
+      const amount = ethers.parseEther("10");
+      const sent = ethers.parseEther("4");
+
+      await token.connect(minter).mint(alice.address, amount);
+      const mintBlock = await ethers.provider.getBlockNumber();
+      await ethers.provider.send("evm_mine", []);
+
+      await token.connect(alice).transfer(bob.address, sent);
+      const transferBlock = await ethers.provider.getBlockNumber();
+      await ethers.provider.send("evm_mine", []);
+
+      // Current votes
+      expect(await token.getVotes(alice.address)).to.equal(amount - sent);
+      expect(await token.getVotes(bob.address)).to.equal(sent);
+      expect(await token.delegates(bob.address)).to.equal(bob.address);
+
+      // Past votes
+      expect(await token.getPastVotes(alice.address, mintBlock)).to.equal(amount);
+      expect(await token.getPastVotes(bob.address, mintBlock)).to.equal(0n);
+      expect(await token.getPastVotes(alice.address, transferBlock)).to.equal(amount - sent);
+      expect(await token.getPastVotes(bob.address, transferBlock)).to.equal(sent);
+    });
+
+    it("updates votes on burn", async () => {
+      const amount = ethers.parseEther("10");
+      const burnAmount = ethers.parseEther("3");
+
+      await token.connect(minter).mint(alice.address, amount);
+      expect(await token.getVotes(alice.address)).to.equal(amount);
+
+      await token.connect(alice).burn(burnAmount);
+      expect(await token.getVotes(alice.address)).to.equal(amount - burnAmount);
+      expect(await token.totalSupply()).to.equal(amount - burnAmount);
     });
   });
 });
