@@ -12,6 +12,8 @@
     "deploy:harmony": "npx hardhat run scripts/deploy-harmony.ts --network harmonyMainnet",
     "deploy:harmony:testnet": "npx hardhat run scripts/deploy-harmony.ts --network harmonyTestnet",
     "deploy:proxy": "npx hardhat run scripts/deploy-proxy.ts",
+    "deploy:pokminter:harmony": "npx hardhat run scripts/deploy-pokminter.ts --network harmonyMainnet",
+    "deploy:pokminter:harmony:testnet": "npx hardhat run scripts/deploy-pokminter.ts --network harmonyTestnet",
     "verify:deployments": "npx hardhat run scripts/verify-from-deployments.ts",
     "verify:harmony": "npx hardhat run scripts/verify-from-deployments.ts --network harmonyMainnet",
     "verify:harmony:testnet": "npx hardhat run scripts/verify-from-deployments.ts --network harmonyTestnet",

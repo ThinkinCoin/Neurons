@@ -41,7 +41,17 @@ async function main() {
     await verifyContract("NeuronsProxy", proxy.address, proxy.constructorArgs);
   }
 
-  if (!neurons && !proxy) {
+  const verifier = data.contracts["ECDSAVerifier"];
+  if (verifier) {
+    await verifyContract("ECDSAVerifier", verifier.address, verifier.constructorArgs);
+  }
+
+  const pok = data.contracts["PoKMinter"];
+  if (pok) {
+    await verifyContract("PoKMinter", pok.address, pok.constructorArgs);
+  }
+
+  if (!neurons && !proxy && !verifier && !pok) {
     throw new Error(`No known contracts found in ${filePath}`);
   }
 }
