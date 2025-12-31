@@ -14,8 +14,7 @@ contract DeployNeurons is Script {
     struct DeployConfig {
         address owner;
         address verifierSigner;
-        string tokenName;
-        string tokenSymbol;
+        address daoTreasury;
         uint256 cooldownPeriod;
         uint256 dailyLimit;
         uint256 maxSingleMint;
@@ -39,6 +38,7 @@ contract DeployNeurons is Script {
         console.log("Deploying Neurons system...");
         console.log("Owner:", config.owner);
         console.log("Verifier Signer:", config.verifierSigner);
+        console.log("DAO Treasury:", config.daoTreasury);
         
         // Deploy core contracts
         DeployedContracts memory contracts = _deployContracts(config);
@@ -62,23 +62,22 @@ contract DeployNeurons is Script {
     function _loadConfig() internal view returns (DeployConfig memory config) {
         config.owner = vm.envOr("NEURONS_OWNER", address(msg.sender));
         config.verifierSigner = vm.envAddress("NEURONS_VERIFIER_SIGNER");
-        config.tokenName = vm.envOr("NEURONS_TOKEN_NAME", string("Neurons"));
-        config.tokenSymbol = vm.envOr("NEURONS_TOKEN_SYMBOL", string("NEURONS"));
+        config.daoTreasury = vm.envOr(
+            "NEURONS_DAO_TREASURY",
+            address(0x76B83B6148ccA891D768cE3129585F25d0104783)
+        );
         config.cooldownPeriod = vm.envOr("NEURONS_COOLDOWN_PERIOD", uint256(1 hours));
         config.dailyLimit = vm.envOr("NEURONS_DAILY_LIMIT", uint256(1000 * 1e18));
         config.maxSingleMint = vm.envOr("NEURONS_MAX_SINGLE_MINT", uint256(100 * 1e18));
         config.deployBridge = vm.envOr("NEURONS_DEPLOY_BRIDGE", false);
         
         require(config.verifierSigner != address(0), "NEURONS_VERIFIER_SIGNER required");
+        require(config.daoTreasury != address(0), "NEURONS_DAO_TREASURY required");
     }
     
     function _deployContracts(DeployConfig memory config) internal returns (DeployedContracts memory contracts) {
         console.log("1. Deploying Neurons token...");
-        contracts.token = new Neurons(
-            config.owner,
-            config.tokenName,
-            config.tokenSymbol
-        );
+        contracts.token = new Neurons(config.owner);
         console.log("   Neurons token deployed at:", address(contracts.token));
         
         console.log("2. Deploying ECDSA verifier...");
@@ -92,7 +91,8 @@ contract DeployNeurons is Script {
         contracts.minter = new PoKMinter(
             config.owner,
             address(contracts.token),
-            address(contracts.verifier)
+            address(contracts.verifier),
+            config.daoTreasury
         );
         console.log("   PoK minter deployed at:", address(contracts.minter));
     }
@@ -105,19 +105,13 @@ contract DeployNeurons is Script {
         console.log("   Granted MINTER_ROLE to PoK minter");
         
         // Configure minter parameters if different from defaults
-        if (config.cooldownPeriod != 1 hours) {
-            contracts.minter.setCooldownPeriod(config.cooldownPeriod);
-            console.log("   Set cooldown period to:", config.cooldownPeriod);
-        }
-        
-        if (config.dailyLimit != 1000 * 1e18) {
-            contracts.minter.setDailyLimit(config.dailyLimit);
-            console.log("   Set daily limit to:", config.dailyLimit);
-        }
-        
-        if (config.maxSingleMint != 100 * 1e18) {
-            contracts.minter.setMaxSingleMint(config.maxSingleMint);
-            console.log("   Set max single mint to:", config.maxSingleMint);
+        if (
+            config.cooldownPeriod != 1 hours ||
+            config.dailyLimit != 1000 * 1e18 ||
+            config.maxSingleMint != 100 * 1e18
+        ) {
+            contracts.minter.setLimits(config.cooldownPeriod, config.dailyLimit, config.maxSingleMint);
+            console.log("   Updated minter limits");
         }
     }
     
@@ -138,6 +132,7 @@ contract DeployNeurons is Script {
         console.log("Deployer:", msg.sender);
         console.log("Owner:", config.owner);
         console.log("Verifier Signer:", config.verifierSigner);
+        console.log("DAO Treasury:", config.daoTreasury);
         console.log("");
         console.log("Contract Addresses:");
         console.log("  Neurons Token:", address(contracts.token));
@@ -148,8 +143,8 @@ contract DeployNeurons is Script {
         }
         console.log("");
         console.log("Configuration:");
-        console.log("  Token Name:", config.tokenName);
-        console.log("  Token Symbol:", config.tokenSymbol);
+        console.log("  Token Name: Neurons");
+        console.log("  Token Symbol: Neurons");
         console.log("  Max Supply: 10,000,000 NEURONS");
         console.log("  Cooldown Period:", config.cooldownPeriod, "seconds");
         console.log("  Daily Limit:", config.dailyLimit / 1e18, "NEURONS");
@@ -174,8 +169,6 @@ contract DeployTestnet is Script {
         address testSigner = vm.addr(testPrivateKey);
         
         vm.setEnv("NEURONS_VERIFIER_SIGNER", vm.toString(testSigner));
-        vm.setEnv("NEURONS_TOKEN_NAME", "Neurons Testnet");
-        vm.setEnv("NEURONS_TOKEN_SYMBOL", "tNEURONS");
         vm.setEnv("NEURONS_DEPLOY_BRIDGE", "true");
         
         // Lower limits for testing
@@ -233,9 +226,7 @@ contract ConfigureNeurons is Script {
     ) external {
         vm.startBroadcast();
         PoKMinter pokMinter = PoKMinter(minter);
-        pokMinter.setCooldownPeriod(cooldownPeriod);
-        pokMinter.setDailyLimit(dailyLimit);
-        pokMinter.setMaxSingleMint(maxSingleMint);
+        pokMinter.setLimits(cooldownPeriod, dailyLimit, maxSingleMint);
         vm.stopBroadcast();
         console.log("Updated minter configuration");
     }

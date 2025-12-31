@@ -81,6 +81,9 @@ describe("Neurons (ERC20)", function () {
       expect(await token.balanceOf(alice.address)).to.equal(amount);
       expect(await token.totalSupply()).to.equal(amount);
       expect(await token.remainingSupply()).to.equal(MAX_SUPPLY - amount);
+
+      // Votes are enabled via ERC20Votes + auto self-delegation
+      expect(await token.getVotes(alice.address)).to.equal(amount);
     });
 
     it("reverts for non-minter", async () => {
@@ -222,6 +225,35 @@ describe("Neurons (ERC20)", function () {
       await token.permit(owner.address, spender.address, value, deadline, v, r, s);
       expect(await token.allowance(owner.address, spender.address)).to.equal(value);
       expect(await token.nonces(owner.address)).to.equal(nonce + 1n);
+    });
+  });
+
+  describe("votes (ERC20Votes)", () => {
+    beforeEach(async () => {
+      await token.setMinter(minter.address, true);
+    });
+
+    it("supports past votes and past total supply by block", async () => {
+      const amount = ethers.parseEther("10");
+      await token.connect(minter).mint(alice.address, amount);
+
+      const mintBlock = await ethers.provider.getBlockNumber();
+      await ethers.provider.send("evm_mine", []);
+
+      expect(await token.getPastVotes(alice.address, mintBlock)).to.equal(amount);
+      expect(await token.getPastTotalSupply(mintBlock)).to.equal(amount);
+    });
+
+    it("allows delegation to third parties", async () => {
+      const amount = ethers.parseEther("10");
+      await token.connect(minter).mint(alice.address, amount);
+
+      // auto self-delegation gives Alice votes initially
+      expect(await token.getVotes(alice.address)).to.equal(amount);
+
+      await token.connect(alice).delegate(bob.address);
+      expect(await token.getVotes(alice.address)).to.equal(0n);
+      expect(await token.getVotes(bob.address)).to.equal(amount);
     });
   });
 });

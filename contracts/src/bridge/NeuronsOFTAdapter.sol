@@ -8,8 +8,8 @@ pragma solidity ^0.8.18;
 
 // Minimal compile-safe stub to document integration points.
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {Errors} from "../libs/Errors.sol";
 import {Neurons} from "../tokens/Neurons.sol";
 
@@ -40,8 +40,9 @@ contract NeuronsOFTAdapter is Ownable, Pausable, ReentrancyGuard {
     event TokensSent(address indexed from, uint16 indexed dstChainId, address indexed to, uint256 amount);
     event TokensReceived(address indexed to, uint16 indexed srcChainId, uint256 amount);
 
-    constructor(address owner_, address token_) Ownable(owner_) {
+    constructor(address owner_, address token_) {
         if (owner_ == address(0) || token_ == address(0)) revert Errors.ZeroAddress();
+        _transferOwnership(owner_);
         token = Neurons(token_);
         isBurnMintMode = true; // Default to burn/mint for simplicity
     }

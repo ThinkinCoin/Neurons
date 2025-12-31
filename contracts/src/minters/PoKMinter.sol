@@ -2,8 +2,8 @@
 pragma solidity ^0.8.18;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {Neurons} from "../tokens/Neurons.sol";
 import {IVerifier} from "../interfaces/IVerifier.sol";
 import {Errors} from "../libs/Errors.sol";
@@ -13,6 +13,9 @@ import {Errors} from "../libs/Errors.sol";
 contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
     Neurons public token;
     IVerifier public verifier;
+
+    // DAO treasury that receives minted tokens
+    address public daoTreasury;
 
     // Prevent proof replay; scope by nonce
     mapping(bytes32 => bool) public nonceUsed;
@@ -33,11 +36,25 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
 
     event TokenSet(address indexed token);
     event VerifierSet(address indexed verifier);
-    event MintedWithProof(address indexed to, uint256 amount, bytes32 indexed nonce);
+    event DaoTreasuryUpdated(address indexed oldTreasury, address indexed newTreasury);
+    event MintedWithProof(address indexed beneficiary, address indexed treasury, uint256 amount, bytes32 indexed nonce);
     event LimitsUpdated(uint256 minCooldown, uint256 maxDailyMint, uint256 maxSingleMint);
 
-    constructor(address owner_) Ownable(owner_) {
+    constructor(address owner_, address token_, address verifier_, address daoTreasury_) {
         if (owner_ == address(0)) revert Errors.ZeroAddress();
+
+        _transferOwnership(owner_);
+        if (token_ != address(0)) {
+            token = Neurons(token_);
+            emit TokenSet(token_);
+        }
+        if (verifier_ != address(0)) {
+            verifier = IVerifier(verifier_);
+            emit VerifierSet(verifier_);
+        }
+        if (daoTreasury_ == address(0)) revert Errors.ZeroAddress();
+        daoTreasury = daoTreasury_;
+        emit DaoTreasuryUpdated(address(0), daoTreasury_);
     }
 
     // -------- Admin --------
@@ -51,6 +68,13 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
         if (verifier_ == address(0)) revert Errors.ZeroAddress();
         verifier = IVerifier(verifier_);
         emit VerifierSet(verifier_);
+    }
+
+    function setDaoTreasury(address daoTreasury_) external onlyOwner {
+        if (daoTreasury_ == address(0)) revert Errors.ZeroAddress();
+        address old = daoTreasury;
+        daoTreasury = daoTreasury_;
+        emit DaoTreasuryUpdated(old, daoTreasury_);
     }
 
     function setLimits(
@@ -80,54 +104,55 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
     // -------- Mint Flow --------
     /// @dev Caller is expected to be a backend/orchestrator or public entry
     function mintWithProof(
-        address to,
+        address beneficiary,
         uint256 amount,
         bytes calldata proof,
         bytes32 nonce
     ) external whenNotPaused nonReentrant {
         if (address(token) == address(0)) revert Errors.ZeroAddress();
         if (address(verifier) == address(0)) revert Errors.VerifierNotSet();
-        if (to == address(0)) revert Errors.ZeroAddress();
+        if (daoTreasury == address(0)) revert Errors.ZeroAddress();
+        if (beneficiary == address(0)) revert Errors.ZeroAddress();
         if (amount == 0) revert Errors.InvalidAmount();
         if (amount > maxSingleMint) revert Errors.SingleMintLimitExceeded();
         if (nonceUsed[nonce]) revert Errors.AlreadyUsed();
 
         // Rate limiting checks
-        if (block.timestamp < lastMintTime[to] + minCooldown) {
+        if (block.timestamp < lastMintTime[beneficiary] + minCooldown) {
             revert Errors.CooldownNotMet();
         }
 
         // Daily limit check
         uint256 currentDay = block.timestamp / 1 days;
-        if (lastMintDay[to] != currentDay) {
+        if (lastMintDay[beneficiary] != currentDay) {
             // Reset daily counter
-            dailyMintAmount[to] = 0;
-            lastMintDay[to] = currentDay;
+            dailyMintAmount[beneficiary] = 0;
+            lastMintDay[beneficiary] = currentDay;
         }
         
-        if (dailyMintAmount[to] + amount > maxDailyMint) {
+        if (dailyMintAmount[beneficiary] + amount > maxDailyMint) {
             revert Errors.DailyLimitExceeded();
         }
 
         // 1) Validate proof (MUST REVERT on invalid)
-        bool ok = verifier.verify(to, amount, proof, nonce);
+        bool ok = verifier.verify(beneficiary, amount, proof, nonce);
         if (!ok) revert Errors.InvalidProof();
 
         // 2) Mark nonce (anti-replay)
         nonceUsed[nonce] = true;
 
         // 3) Update rate limiting
-        lastMintTime[to] = block.timestamp;
-        dailyMintAmount[to] += amount;
+        lastMintTime[beneficiary] = block.timestamp;
+        dailyMintAmount[beneficiary] += amount;
 
         // 4) Mint via role-gated token (PoKMinter MUST have MINTER_ROLE)
-        token.mint(to, amount);
+        token.mint(daoTreasury, amount);
 
         // 5) Update analytics
         totalMintsProcessed++;
         totalTokensMinted += amount;
 
-        emit MintedWithProof(to, amount, nonce);
+        emit MintedWithProof(beneficiary, daoTreasury, amount, nonce);
     }
 
     /// @dev Batch mint with multiple proofs (for efficiency)
@@ -149,28 +174,28 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
         uint256 currentDay = block.timestamp / 1 days;
 
         for (uint256 i = 0; i < recipients.length; i++) {
-            address to = recipients[i];
+            address beneficiary = recipients[i];
             uint256 amount = amounts[i];
             bytes calldata proof = proofs[i];
             bytes32 nonce = nonces[i];
 
-            if (to == address(0)) continue; // Skip invalid addresses
+            if (beneficiary == address(0)) continue; // Skip invalid addresses
             if (amount == 0 || amount > maxSingleMint) continue; // Skip invalid amounts
             if (nonceUsed[nonce]) continue; // Skip used nonces
 
             // Rate limiting
-            if (block.timestamp < lastMintTime[to] + minCooldown) continue; // Skip if too soon
+            if (block.timestamp < lastMintTime[beneficiary] + minCooldown) continue; // Skip if too soon
 
             // Daily limit check
-            if (lastMintDay[to] != currentDay) {
-                dailyMintAmount[to] = 0;
-                lastMintDay[to] = currentDay;
+            if (lastMintDay[beneficiary] != currentDay) {
+                dailyMintAmount[beneficiary] = 0;
+                lastMintDay[beneficiary] = currentDay;
             }
             
-            if (dailyMintAmount[to] + amount > maxDailyMint) continue; // Skip if exceeds daily limit
+            if (dailyMintAmount[beneficiary] + amount > maxDailyMint) continue; // Skip if exceeds daily limit
 
             // Verify proof
-            try verifier.verify(to, amount, proof, nonce) returns (bool ok) {
+            try verifier.verify(beneficiary, amount, proof, nonce) returns (bool ok) {
                 if (!ok) continue; // Skip invalid proofs
             } catch {
                 continue; // Skip if verification fails
@@ -178,17 +203,17 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
 
             // Mark nonce and update limits
             nonceUsed[nonce] = true;
-            lastMintTime[to] = block.timestamp;
-            dailyMintAmount[to] += amount;
+            lastMintTime[beneficiary] = block.timestamp;
+            dailyMintAmount[beneficiary] += amount;
 
             // Mint
-            token.mint(to, amount);
+            token.mint(daoTreasury, amount);
 
             // Update analytics
             totalMintsProcessed++;
             totalTokensMinted += amount;
 
-            emit MintedWithProof(to, amount, nonce);
+            emit MintedWithProof(beneficiary, daoTreasury, amount, nonce);
         }
     }
 
