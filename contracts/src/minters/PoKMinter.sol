@@ -8,13 +8,13 @@ import {Neurons} from "../tokens/Neurons.sol";
 import {IVerifier} from "../interfaces/IVerifier.sol";
 import {Errors} from "../libs/Errors.sol";
 
-/// @title PoK Minter
-/// @notice Mints Neurons upon successful Proof-of-Knowledge / AI workload verification.
+/// @title PoK Distributor
+/// @notice Distributes Neurons from the DAO treasury upon successful Proof-of-Knowledge verification.
 contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
     Neurons public token;
     IVerifier public verifier;
 
-    // DAO treasury that receives minted tokens
+    // DAO treasury that holds tokens to be distributed
     address public daoTreasury;
 
     // Prevent proof replay; scope by nonce
@@ -99,7 +99,7 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
         nonceUsed[nonce] = used;
     }
 
-    // -------- Mint Flow --------
+    // -------- Distribution Flow --------
     /// @dev Caller is expected to be a backend/orchestrator or public entry
     function mintWithProof(
         address beneficiary,
@@ -143,8 +143,11 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
         lastMintTime[beneficiary] = block.timestamp;
         dailyMintAmount[beneficiary] += amount;
 
-        // 4) Mint via role-gated token (PoKMinter MUST have MINTER_ROLE)
-        token.mint(daoTreasury, amount);
+        // 4) Distribute from DAO treasury (DAO must approve this contract)
+        if (token.balanceOf(daoTreasury) < amount) revert Errors.InsufficientBalance();
+        if (token.allowance(daoTreasury, address(this)) < amount) revert Errors.InsufficientBalance();
+        bool sent = token.transferFrom(daoTreasury, beneficiary, amount);
+        if (!sent) revert Errors.InsufficientBalance();
 
         // 5) Update analytics
         totalMintsProcessed++;
@@ -204,8 +207,14 @@ contract PoKMinter is Ownable, Pausable, ReentrancyGuard {
             lastMintTime[beneficiary] = block.timestamp;
             dailyMintAmount[beneficiary] += amount;
 
-            // Mint
-            token.mint(daoTreasury, amount);
+            // Distribute (DAO must approve this contract)
+            if (token.balanceOf(daoTreasury) < amount) continue;
+            if (token.allowance(daoTreasury, address(this)) < amount) continue;
+            try token.transferFrom(daoTreasury, beneficiary, amount) returns (bool sent) {
+                if (!sent) continue;
+            } catch {
+                continue;
+            }
 
             // Update analytics
             totalMintsProcessed++;

@@ -26,8 +26,10 @@ describe("PoKMinter", function () {
     minter = await PoKMinter.deploy(owner.address, await token.getAddress(), await verifier.getAddress(), treasury.address);
     await minter.waitForDeployment();
 
-    // PoKMinter must have MINTER_ROLE on token
-    await token.connect(owner).setMinter(await minter.getAddress(), true);
+    // Mint some initial inventory to treasury and approve PoKMinter to distribute it
+    await token.connect(owner).setMinter(owner.address, true);
+    await token.connect(owner).mint(treasury.address, ethers.parseEther("1000"));
+    await token.connect(treasury).approve(await minter.getAddress(), ethers.parseEther("1000"));
   });
 
   it("constructor requires non-zero owner and daoTreasury", async () => {
@@ -38,7 +40,7 @@ describe("PoKMinter", function () {
       .reverted;
   });
 
-  it("mints to daoTreasury and updates accounting", async () => {
+  it("distributes from daoTreasury to beneficiary and updates accounting", async () => {
     const amount = ethers.parseEther("10");
     const nonce = ethers.keccak256(ethers.toUtf8Bytes("nonce1"));
 
@@ -46,7 +48,7 @@ describe("PoKMinter", function () {
       .to.emit(minter, "MintedWithProof")
       .withArgs(alice.address, treasury.address, amount, nonce);
 
-    expect(await token.balanceOf(treasury.address)).to.equal(amount);
+    expect(await token.balanceOf(alice.address)).to.equal(amount);
     expect(await minter.nonceUsed(nonce)).to.equal(true);
     expect(await minter.totalMintsProcessed()).to.equal(1n);
     expect(await minter.totalTokensMinted()).to.equal(amount);
@@ -57,6 +59,16 @@ describe("PoKMinter", function () {
 
     const amount = ethers.parseEther("1");
     const nonce = ethers.keccak256(ethers.toUtf8Bytes("nonce2"));
+
+    await expect(minter.mintWithProof(alice.address, amount, "0x", nonce)).to.be.reverted;
+  });
+
+  it("reverts when treasury has no allowance (DAO must approve)", async () => {
+    const amount = ethers.parseEther("1");
+    const nonce = ethers.keccak256(ethers.toUtf8Bytes("nonce-no-allowance"));
+
+    // Remove allowance
+    await token.connect(treasury).approve(await minter.getAddress(), 0);
 
     await expect(minter.mintWithProof(alice.address, amount, "0x", nonce)).to.be.reverted;
   });
@@ -106,8 +118,9 @@ describe("PoKMinter", function () {
 
     await minter.batchMintWithProofs(recipients, amounts, proofs, nonces);
 
-    // Only alice (amount=1) and bob (amount=2) should be minted (zero address + zero amount skipped)
-    expect(await token.balanceOf(treasury.address)).to.equal(ethers.parseEther("3"));
+    // Only alice (amount=1) and bob (amount=2) should be distributed
+    expect(await token.balanceOf(alice.address)).to.equal(ethers.parseEther("1"));
+    expect(await token.balanceOf(bob.address)).to.equal(ethers.parseEther("2"));
     expect(await minter.totalMintsProcessed()).to.equal(2n);
   });
 
@@ -135,7 +148,7 @@ describe("PoKMinter", function () {
     await verifier.setMode(2); // Revert
     await minter.batchMintWithProofs([recipients[2]], [amounts[2]], [proofs[2]], [nonces[2]]);
 
-    expect(await token.balanceOf(treasury.address)).to.equal(ethers.parseEther("1"));
+    expect(await token.balanceOf(alice.address)).to.equal(ethers.parseEther("1"));
     expect(await minter.totalMintsProcessed()).to.equal(1n);
   });
 

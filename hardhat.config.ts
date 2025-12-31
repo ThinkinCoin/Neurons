@@ -111,8 +111,9 @@ const config: HardhatUserConfig = {
       bscTestnet: process.env.ETHERSCAN_API_KEY || "",
       arbitrumOne: process.env.ETHERSCAN_API_KEY || "",
       arbitrumSepolia: process.env.ETHERSCAN_API_KEY || "",
-      harmonyMainnet: process.env.HARMONYSCAN_API_KEY || "",
-      harmonyTestnet: process.env.HARMONYSCAN_API_KEY || "",
+      // Blockscout (Harmony) geralmente ignora apiKey, mas o plugin exige um valor.
+      harmonyMainnet: process.env.HARMONY_BLOCKSCOUT_API_KEY || "blockscout",
+      harmonyTestnet: process.env.HARMONY_BLOCKSCOUT_API_KEY || "blockscout",
     },
     customChains: [
       {
@@ -191,19 +192,22 @@ const config: HardhatUserConfig = {
         network: "harmonyMainnet",
         chainId: 1666600000,
         urls: {
-          apiURL: "https://api.harmonyscan.com/api",
-          browserURL: "https://harmonyscan.com",
+          apiURL: "https://explorer.harmony.one/api",
+          browserURL: "https://explorer.harmony.one",
         },
       },
       {
         network: "harmonyTestnet",
         chainId: 1666700000,
         urls: {
-          apiURL: "https://api-testnet.harmonyscan.com/api",
-          browserURL: "https://testnet.harmonyscan.com",
+          apiURL: "https://explorer.testnet.harmony.one/api",
+          browserURL: "https://explorer.testnet.harmony.one",
         },
       },
     ],
+  },
+  sourcify: {
+    enabled: false,
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
