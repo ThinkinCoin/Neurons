@@ -10,7 +10,7 @@ function optionalNumberEnv(name: string): number | undefined {
 }
 
 function deployOverrides() {
-  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 6_000_000;
+  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 12_000_000;
   const gasPriceGwei = optionalNumberEnv("GAS_PRICE_GWEI") ?? 30;
   const gasPrice = ethers.parseUnits(gasPriceGwei.toString(), "gwei");
 
@@ -42,7 +42,15 @@ async function main() {
   console.log(`[deploy-proxy] bridge=${bridge}`);
 
   const factory = await ethers.getContractFactory("NeuronsProxy");
-  const proxy = await factory.deploy(owner, bridge, deployOverrides());
+  if (!factory.bytecode || factory.bytecode === "0x") {
+    throw new Error("NeuronsProxy bytecode vazio. Rode `npx hardhat compile` e tente novamente.");
+  }
+
+  const overrides = deployOverrides();
+  console.log(`[deploy-proxy] gasLimit=${overrides.gasLimit} gasPrice=${overrides.gasPrice.toString()}`);
+  console.log(`[deploy-proxy] bytecodeLength=${(factory.bytecode.length - 2) / 2} bytes`);
+
+  const proxy = await factory.deploy(owner, bridge, overrides);
   const deploymentTx = proxy.deploymentTransaction();
   if (!deploymentTx) throw new Error("Deployment transaction not found");
 
@@ -53,6 +61,12 @@ async function main() {
 
   console.log(`[deploy-proxy] NeuronsProxy deployed at ${address}`);
   console.log(`[deploy-proxy] tx=${deploymentTx.hash} block=${receipt.blockNumber}`);
+
+  if (receipt.status === 0 && receipt.gasUsed === BigInt(overrides.gasLimit)) {
+    throw new Error(
+      `Deploy falhou consumindo 100% do gas (provável out-of-gas). Aumente GAS_LIMIT e tente novamente. tx=${deploymentTx.hash}`,
+    );
+  }
 
   const outPath = optionalEnv("DEPLOYMENTS_FILE") ?? defaultDeploymentPath(network.name);
 

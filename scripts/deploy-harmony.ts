@@ -17,7 +17,8 @@ function optionalNumberEnv(name: string): number | undefined {
 function deployOverrides() {
   // Harmony RPCs frequentemente não suportam EIP-1559 fee methods e/ou estimateGas.
   // Usar overrides explícitos evita chamadas a métodos não implementados.
-  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 6_000_000;
+  // Neurons (OZ5 + Votes) pode precisar de mais gas na criação.
+  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 15_000_000;
   const gasPriceGwei = optionalNumberEnv("GAS_PRICE_GWEI") ?? 30;
   const gasPrice = ethers.parseUnits(gasPriceGwei.toString(), "gwei");
 
@@ -36,7 +37,15 @@ async function main() {
   console.log(`[deploy-harmony] owner=${owner}`);
 
   const factory = await ethers.getContractFactory("Neurons");
-  const token = await factory.deploy(owner, deployOverrides());
+  if (!factory.bytecode || factory.bytecode === "0x") {
+    throw new Error("Neurons bytecode vazio. Rode `npx hardhat compile` e tente novamente.");
+  }
+
+  const overrides = deployOverrides();
+  console.log(`[deploy-harmony] gasLimit=${overrides.gasLimit} gasPrice=${overrides.gasPrice.toString()}`);
+  console.log(`[deploy-harmony] bytecodeLength=${(factory.bytecode.length - 2) / 2} bytes`);
+
+  const token = await factory.deploy(owner, overrides);
   const deploymentTx = token.deploymentTransaction();
   if (!deploymentTx) throw new Error("Deployment transaction not found");
 
@@ -47,6 +56,12 @@ async function main() {
 
   console.log(`[deploy-harmony] Neurons deployed at ${address}`);
   console.log(`[deploy-harmony] tx=${deploymentTx.hash} block=${receipt.blockNumber}`);
+
+  if (receipt.status === 0 && receipt.gasUsed === BigInt(overrides.gasLimit)) {
+    throw new Error(
+      `Deploy falhou consumindo 100% do gas (provável out-of-gas). Aumente GAS_LIMIT (ex: 25000000) e tente novamente. tx=${deploymentTx.hash}`,
+    );
+  }
 
   const outPath = envAddress("DEPLOYMENTS_FILE") ?? defaultDeploymentPath(network.name);
 
