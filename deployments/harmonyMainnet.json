@@ -1,0 +1,18 @@
+{
+  "schema": "neurons.deployments.v1",
+  "network": "harmonyMainnet",
+  "chainId": 1666600000,
+  "timestamp": "2025-12-31T21:07:04.639Z",
+  "deployer": "0xF59de020d650E69eF0755Bf37F3D16B80Ee132F5",
+  "contracts": {
+    "Neurons": {
+      "name": "Neurons",
+      "address": "0xA4A72cB0C1cdE087B40d79F28f559B047Df1760f",
+      "txHash": "0x9b1bc231df8c335816f8523f39dc7c9892e6ec7dfa75655bf8b8e7d003cd24c8",
+      "blockNumber": 83137279,
+      "constructorArgs": [
+        "0xF59de020d650E69eF0755Bf37F3D16B80Ee132F5"
+      ]
+    }
+  }
+}
