@@ -14,11 +14,53 @@ function optionalNumberEnv(name: string): number | undefined {
   return parsed;
 }
 
-function deployOverrides() {
+async function resolveGasLimit(requested?: number): Promise<number> {
+  // Guard rails: se alguém setar GAS_LIMIT em wei (ex: 210 gwei => 210000000000), isso explode.
+  if (requested !== undefined && requested > 100_000_000) {
+    throw new Error(
+      `GAS_LIMIT muito alto (${requested}). Parece valor em wei. Use um número de unidades de gas (ex: 8000000, 12000000).`,
+    );
+  }
+
+  const latestBlock = await ethers.provider.getBlock("latest");
+  let blockGasLimitNum = latestBlock?.gasLimit ? Number(latestBlock.gasLimit) : undefined;
+
+  // Alguns RPCs retornam block sem gasLimit no wrapper; tente raw RPC.
+  if (!blockGasLimitNum) {
+    try {
+      const rawBlock = await ethers.provider.send("eth_getBlockByNumber", ["latest", false]);
+      const rawGasLimitHex = rawBlock?.gasLimit as string | undefined;
+      if (rawGasLimitHex && typeof rawGasLimitHex === "string") {
+        blockGasLimitNum = Number(BigInt(rawGasLimitHex));
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const fallback = 8_000_000;
+  const desired = requested ?? fallback;
+
+  if (blockGasLimitNum) {
+    const cap = Math.max(1, Math.floor(blockGasLimitNum * 0.9));
+    if (desired > cap) {
+      console.warn(
+        `[deploy-harmony] GAS_LIMIT=${desired} acima do limite do bloco (${blockGasLimitNum}); usando cap=${cap}`,
+      );
+      return cap;
+    }
+    return desired;
+  }
+
+  // Sem blockGasLimit confiável, use o valor desejado (conservador por padrão).
+  return desired;
+}
+
+async function deployOverrides() {
   // Harmony RPCs frequentemente não suportam EIP-1559 fee methods e/ou estimateGas.
   // Usar overrides explícitos evita chamadas a métodos não implementados.
   // Neurons (OZ5 + Votes) pode precisar de mais gas na criação.
-  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 15_000_000;
+  const gasLimit = await resolveGasLimit(optionalNumberEnv("GAS_LIMIT"));
   const gasPriceGwei = optionalNumberEnv("GAS_PRICE_GWEI") ?? 30;
   const gasPrice = ethers.parseUnits(gasPriceGwei.toString(), "gwei");
 
@@ -41,7 +83,11 @@ async function main() {
     throw new Error("Neurons bytecode vazio. Rode `npx hardhat compile` e tente novamente.");
   }
 
-  const overrides = deployOverrides();
+  const overrides = await deployOverrides();
+  const latest = await ethers.provider.getBlock("latest");
+  if (latest?.gasLimit) {
+    console.log(`[deploy-harmony] latestBlockGasLimit=${latest.gasLimit.toString()}`);
+  }
   console.log(`[deploy-harmony] gasLimit=${overrides.gasLimit} gasPrice=${overrides.gasPrice.toString()}`);
   console.log(`[deploy-harmony] bytecodeLength=${(factory.bytecode.length - 2) / 2} bytes`);
 

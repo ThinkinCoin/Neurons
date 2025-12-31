@@ -9,8 +9,45 @@ function optionalNumberEnv(name: string): number | undefined {
   return parsed;
 }
 
-function deployOverrides() {
-  const gasLimit = optionalNumberEnv("GAS_LIMIT") ?? 12_000_000;
+async function resolveGasLimit(requested?: number): Promise<number> {
+  if (requested !== undefined && requested > 100_000_000) {
+    throw new Error(
+      `GAS_LIMIT muito alto (${requested}). Parece valor em wei. Use unidades de gas (ex: 8000000, 12000000).`,
+    );
+  }
+
+  const latestBlock = await ethers.provider.getBlock("latest");
+  let blockGasLimitNum = latestBlock?.gasLimit ? Number(latestBlock.gasLimit) : undefined;
+
+  if (!blockGasLimitNum) {
+    try {
+      const rawBlock = await ethers.provider.send("eth_getBlockByNumber", ["latest", false]);
+      const rawGasLimitHex = rawBlock?.gasLimit as string | undefined;
+      if (rawGasLimitHex && typeof rawGasLimitHex === "string") {
+        blockGasLimitNum = Number(BigInt(rawGasLimitHex));
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const fallback = 12_000_000;
+  const desired = requested ?? fallback;
+
+  if (blockGasLimitNum) {
+    const cap = Math.max(1, Math.floor(blockGasLimitNum * 0.9));
+    if (desired > cap) {
+      console.warn(`[deploy-proxy] GAS_LIMIT=${desired} acima do limite do bloco (${blockGasLimitNum}); usando cap=${cap}`);
+      return cap;
+    }
+    return desired;
+  }
+
+  return desired;
+}
+
+async function deployOverrides() {
+  const gasLimit = await resolveGasLimit(optionalNumberEnv("GAS_LIMIT"));
   const gasPriceGwei = optionalNumberEnv("GAS_PRICE_GWEI") ?? 30;
   const gasPrice = ethers.parseUnits(gasPriceGwei.toString(), "gwei");
 
@@ -46,7 +83,7 @@ async function main() {
     throw new Error("NeuronsProxy bytecode vazio. Rode `npx hardhat compile` e tente novamente.");
   }
 
-  const overrides = deployOverrides();
+  const overrides = await deployOverrides();
   console.log(`[deploy-proxy] gasLimit=${overrides.gasLimit} gasPrice=${overrides.gasPrice.toString()}`);
   console.log(`[deploy-proxy] bytecodeLength=${(factory.bytecode.length - 2) / 2} bytes`);
 

@@ -32,7 +32,7 @@ const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.33",
     settings: {
-      evmVersion: "shanghai",
+      evmVersion: (process.env.EVM_VERSION as any) || "shanghai",
       optimizer: { enabled: true, runs: 200 },
     },
   },
