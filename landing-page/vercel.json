@@ -6,7 +6,7 @@
   "devCommand": "npm run dev",
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/coverage$", "dest": "/coverage/index.html" },
+    { "src": "/coverage/?$", "dest": "/coverage/index.html" },
     { "src": "/coverage/(.*)", "dest": "/coverage/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
