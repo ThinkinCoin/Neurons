@@ -10,27 +10,6 @@ import type {
 
 const _abi = [
   {
-    inputs: [],
-    name: "AccessControlBadConfirmation",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        internalType: "bytes32",
-        name: "neededRole",
-        type: "bytes32",
-      },
-    ],
-    name: "AccessControlUnauthorizedAccount",
-    type: "error",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -175,7 +154,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "callerConfirmation",
+        name: "account",
         type: "address",
       },
     ],

@@ -29,6 +29,7 @@ export interface PoKMinterInterface extends Interface {
       | "batchMintWithProofs"
       | "canMint"
       | "dailyMintAmount"
+      | "daoTreasury"
       | "emergencySetNonceUsed"
       | "getMintingStats"
       | "getNextMintTime"
@@ -44,6 +45,7 @@ export interface PoKMinterInterface extends Interface {
       | "pause"
       | "paused"
       | "renounceOwnership"
+      | "setDaoTreasury"
       | "setLimits"
       | "setToken"
       | "setVerifier"
@@ -57,6 +59,7 @@ export interface PoKMinterInterface extends Interface {
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "DaoTreasuryUpdated"
       | "LimitsUpdated"
       | "MintedWithProof"
       | "OwnershipTransferred"
@@ -77,6 +80,10 @@ export interface PoKMinterInterface extends Interface {
   encodeFunctionData(
     functionFragment: "dailyMintAmount",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "daoTreasury",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "emergencySetNonceUsed",
@@ -130,6 +137,10 @@ export interface PoKMinterInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setDaoTreasury",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setLimits",
     values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
@@ -164,6 +175,10 @@ export interface PoKMinterInterface extends Interface {
   decodeFunctionResult(functionFragment: "canMint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "dailyMintAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "daoTreasury",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -214,6 +229,10 @@ export interface PoKMinterInterface extends Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "setDaoTreasury",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setLimits", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(
@@ -235,6 +254,19 @@ export interface PoKMinterInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "verifier", data: BytesLike): Result;
+}
+
+export namespace DaoTreasuryUpdatedEvent {
+  export type InputTuple = [oldTreasury: AddressLike, newTreasury: AddressLike];
+  export type OutputTuple = [oldTreasury: string, newTreasury: string];
+  export interface OutputObject {
+    oldTreasury: string;
+    newTreasury: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace LimitsUpdatedEvent {
@@ -261,13 +293,20 @@ export namespace LimitsUpdatedEvent {
 
 export namespace MintedWithProofEvent {
   export type InputTuple = [
-    to: AddressLike,
+    beneficiary: AddressLike,
+    treasury: AddressLike,
     amount: BigNumberish,
     nonce: BytesLike
   ];
-  export type OutputTuple = [to: string, amount: bigint, nonce: string];
+  export type OutputTuple = [
+    beneficiary: string,
+    treasury: string,
+    amount: bigint,
+    nonce: string
+  ];
   export interface OutputObject {
-    to: string;
+    beneficiary: string;
+    treasury: string;
     amount: bigint;
     nonce: string;
   }
@@ -400,6 +439,8 @@ export interface PoKMinter extends BaseContract {
 
   dailyMintAmount: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
+  daoTreasury: TypedContractMethod<[], [string], "view">;
+
   emergencySetNonceUsed: TypedContractMethod<
     [nonce: BytesLike, used: boolean],
     [void],
@@ -437,7 +478,12 @@ export interface PoKMinter extends BaseContract {
   minCooldown: TypedContractMethod<[], [bigint], "view">;
 
   mintWithProof: TypedContractMethod<
-    [to: AddressLike, amount: BigNumberish, proof: BytesLike, nonce: BytesLike],
+    [
+      beneficiary: AddressLike,
+      amount: BigNumberish,
+      proof: BytesLike,
+      nonce: BytesLike
+    ],
     [void],
     "nonpayable"
   >;
@@ -451,6 +497,12 @@ export interface PoKMinter extends BaseContract {
   paused: TypedContractMethod<[], [boolean], "view">;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
+  setDaoTreasury: TypedContractMethod<
+    [daoTreasury_: AddressLike],
+    [void],
+    "nonpayable"
+  >;
 
   setLimits: TypedContractMethod<
     [
@@ -513,6 +565,9 @@ export interface PoKMinter extends BaseContract {
     nameOrSignature: "dailyMintAmount"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
+    nameOrSignature: "daoTreasury"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "emergencySetNonceUsed"
   ): TypedContractMethod<
     [nonce: BytesLike, used: boolean],
@@ -556,7 +611,12 @@ export interface PoKMinter extends BaseContract {
   getFunction(
     nameOrSignature: "mintWithProof"
   ): TypedContractMethod<
-    [to: AddressLike, amount: BigNumberish, proof: BytesLike, nonce: BytesLike],
+    [
+      beneficiary: AddressLike,
+      amount: BigNumberish,
+      proof: BytesLike,
+      nonce: BytesLike
+    ],
     [void],
     "nonpayable"
   >;
@@ -575,6 +635,9 @@ export interface PoKMinter extends BaseContract {
   getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "setDaoTreasury"
+  ): TypedContractMethod<[daoTreasury_: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setLimits"
   ): TypedContractMethod<
@@ -611,6 +674,13 @@ export interface PoKMinter extends BaseContract {
     nameOrSignature: "verifier"
   ): TypedContractMethod<[], [string], "view">;
 
+  getEvent(
+    key: "DaoTreasuryUpdated"
+  ): TypedContractEvent<
+    DaoTreasuryUpdatedEvent.InputTuple,
+    DaoTreasuryUpdatedEvent.OutputTuple,
+    DaoTreasuryUpdatedEvent.OutputObject
+  >;
   getEvent(
     key: "LimitsUpdated"
   ): TypedContractEvent<
@@ -662,6 +732,17 @@ export interface PoKMinter extends BaseContract {
   >;
 
   filters: {
+    "DaoTreasuryUpdated(address,address)": TypedContractEvent<
+      DaoTreasuryUpdatedEvent.InputTuple,
+      DaoTreasuryUpdatedEvent.OutputTuple,
+      DaoTreasuryUpdatedEvent.OutputObject
+    >;
+    DaoTreasuryUpdated: TypedContractEvent<
+      DaoTreasuryUpdatedEvent.InputTuple,
+      DaoTreasuryUpdatedEvent.OutputTuple,
+      DaoTreasuryUpdatedEvent.OutputObject
+    >;
+
     "LimitsUpdated(uint256,uint256,uint256)": TypedContractEvent<
       LimitsUpdatedEvent.InputTuple,
       LimitsUpdatedEvent.OutputTuple,
@@ -673,7 +754,7 @@ export interface PoKMinter extends BaseContract {
       LimitsUpdatedEvent.OutputObject
     >;
 
-    "MintedWithProof(address,uint256,bytes32)": TypedContractEvent<
+    "MintedWithProof(address,address,uint256,bytes32)": TypedContractEvent<
       MintedWithProofEvent.InputTuple,
       MintedWithProofEvent.OutputTuple,
       MintedWithProofEvent.OutputObject

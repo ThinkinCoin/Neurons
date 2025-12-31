@@ -4,9 +4,9 @@
 
 import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
-  IERC20,
-  IERC20Interface,
-} from "../../../../../@openzeppelin/contracts/token/ERC20/IERC20";
+  IVotes,
+  IVotesInterface,
+} from "../../../../../@openzeppelin/contracts/governance/utils/IVotes";
 
 const _abi = [
   {
@@ -15,23 +15,23 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "owner",
+        name: "delegator",
         type: "address",
       },
       {
         indexed: true,
         internalType: "address",
-        name: "spender",
+        name: "fromDelegate",
         type: "address",
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
+        indexed: true,
+        internalType: "address",
+        name: "toDelegate",
+        type: "address",
       },
     ],
-    name: "Approval",
+    name: "DelegateChanged",
     type: "event",
   },
   {
@@ -40,70 +40,73 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
+        name: "delegate",
         type: "address",
       },
       {
         indexed: false,
         internalType: "uint256",
-        name: "value",
+        name: "previousBalance",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newBalance",
         type: "uint256",
       },
     ],
-    name: "Transfer",
+    name: "DelegateVotesChanged",
     type: "event",
   },
   {
     inputs: [
       {
         internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "spender",
+        name: "delegatee",
         type: "address",
       },
     ],
-    name: "allowance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
+    name: "delegate",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
-        name: "spender",
+        name: "delegatee",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "nonce",
         type: "uint256",
       },
-    ],
-    name: "approve",
-    outputs: [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool",
+        internalType: "uint256",
+        name: "expiry",
+        type: "uint256",
+      },
+      {
+        internalType: "uint8",
+        name: "v",
+        type: "uint8",
+      },
+      {
+        internalType: "bytes32",
+        name: "r",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes32",
+        name: "s",
+        type: "bytes32",
       },
     ],
+    name: "delegateBySig",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -115,20 +118,26 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "balanceOf",
+    name: "delegates",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "address",
         name: "",
-        type: "uint256",
+        type: "address",
       },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [],
-    name: "totalSupply",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "timepoint",
+        type: "uint256",
+      },
+    ],
+    name: "getPastTotalSupply",
     outputs: [
       {
         internalType: "uint256",
@@ -143,63 +152,53 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "to",
+        name: "account",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "amount",
+        name: "timepoint",
         type: "uint256",
       },
     ],
-    name: "transfer",
+    name: "getPastVotes",
     outputs: [
       {
-        internalType: "bool",
+        internalType: "uint256",
         name: "",
-        type: "bool",
+        type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
       {
         internalType: "address",
-        name: "from",
+        name: "account",
         type: "address",
       },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
+    ],
+    name: "getVotes",
+    outputs: [
       {
         internalType: "uint256",
-        name: "amount",
+        name: "",
         type: "uint256",
       },
     ],
-    name: "transferFrom",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
 ] as const;
 
-export class IERC20__factory {
+export class IVotes__factory {
   static readonly abi = _abi;
-  static createInterface(): IERC20Interface {
-    return new Interface(_abi) as IERC20Interface;
+  static createInterface(): IVotesInterface {
+    return new Interface(_abi) as IVotesInterface;
   }
-  static connect(address: string, runner?: ContractRunner | null): IERC20 {
-    return new Contract(address, _abi, runner) as unknown as IERC20;
+  static connect(address: string, runner?: ContractRunner | null): IVotes {
+    return new Contract(address, _abi, runner) as unknown as IVotes;
   }
 }

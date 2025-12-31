@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { NeuronsOFTAdapter__factory } from "./NeuronsOFTAdapter__factory";
+export { NeuronsProxy__factory } from "./NeuronsProxy__factory";

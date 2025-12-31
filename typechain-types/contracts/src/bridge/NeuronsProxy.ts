@@ -35,22 +35,17 @@ export declare namespace ERC20Votes {
   };
 }
 
-export interface NeuronsInterface extends Interface {
+export interface NeuronsProxyInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "BURNER_ROLE"
       | "CLOCK_MODE"
-      | "DEFAULT_ADMIN_ROLE"
       | "DOMAIN_SEPARATOR"
-      | "MAX_SUPPLY"
-      | "MINTER_ROLE"
       | "allowance"
       | "approve"
       | "balanceOf"
-      | "batchMint"
-      | "burn"
-      | "burnFrom"
-      | "cap"
+      | "bridge"
+      | "bridgeBurn"
+      | "bridgeMint"
       | "checkpoints"
       | "clock"
       | "decimals"
@@ -61,79 +56,39 @@ export interface NeuronsInterface extends Interface {
       | "eip712Domain"
       | "getPastTotalSupply"
       | "getPastVotes"
-      | "getRoleAdmin"
       | "getVotes"
-      | "grantRole"
-      | "hasRole"
       | "increaseAllowance"
-      | "isBurner"
-      | "isMinter"
-      | "mint"
       | "name"
       | "nonces"
       | "numCheckpoints"
       | "owner"
-      | "pause"
-      | "paused"
       | "permit"
-      | "remainingSupply"
       | "renounceOwnership"
-      | "renounceRole"
-      | "revokeRole"
-      | "setBurner"
-      | "setMinter"
-      | "supportsInterface"
+      | "setBridge"
       | "symbol"
-      | "totalBurned"
-      | "totalMinted"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
       | "transferOwnership"
-      | "unpause"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
       | "Approval"
-      | "BurnerUpdated"
+      | "BridgeUpdated"
       | "DelegateChanged"
       | "DelegateVotesChanged"
       | "EIP712DomainChanged"
-      | "MinterUpdated"
       | "OwnershipTransferred"
-      | "Paused"
-      | "RoleAdminChanged"
-      | "RoleGranted"
-      | "RoleRevoked"
-      | "TokensBurned"
-      | "TokensMinted"
       | "Transfer"
-      | "Unpaused"
   ): EventFragment;
 
-  encodeFunctionData(
-    functionFragment: "BURNER_ROLE",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "CLOCK_MODE",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "DEFAULT_ADMIN_ROLE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "DOMAIN_SEPARATOR",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_SUPPLY",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MINTER_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -148,16 +103,15 @@ export interface NeuronsInterface extends Interface {
     functionFragment: "balanceOf",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "bridge", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "batchMint",
-    values: [AddressLike[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: "burnFrom",
+    functionFragment: "bridgeBurn",
     values: [AddressLike, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "cap", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "bridgeMint",
+    values: [AddressLike, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "checkpoints",
     values: [AddressLike, BigNumberish]
@@ -200,35 +154,11 @@ export interface NeuronsInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getRoleAdmin",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getVotes",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "grantRole",
-    values: [BytesLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "hasRole",
-    values: [BytesLike, AddressLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "increaseAllowance",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isBurner",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isMinter",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
@@ -238,8 +168,6 @@ export interface NeuronsInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "permit",
     values: [
@@ -253,42 +181,14 @@ export interface NeuronsInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "remainingSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceRole",
-    values: [BytesLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "revokeRole",
-    values: [BytesLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setBurner",
-    values: [AddressLike, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setMinter",
-    values: [AddressLike, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [BytesLike]
+    functionFragment: "setBridge",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalBurned",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalMinted",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -305,33 +205,18 @@ export interface NeuronsInterface extends Interface {
     functionFragment: "transferOwnership",
     values: [AddressLike]
   ): string;
-  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "BURNER_ROLE",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "CLOCK_MODE", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "DEFAULT_ADMIN_ROLE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "DOMAIN_SEPARATOR",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "MAX_SUPPLY", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "MINTER_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "batchMint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "burnFrom", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "cap", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "bridge", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "bridgeBurn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "bridgeMint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "checkpoints",
     data: BytesLike
@@ -360,20 +245,11 @@ export interface NeuronsInterface extends Interface {
     functionFragment: "getPastVotes",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRoleAdmin",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "getVotes", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "isBurner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isMinter", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(
@@ -381,37 +257,13 @@ export interface NeuronsInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "remainingSupply",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceRole",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setBurner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setMinter", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "setBridge", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalBurned",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalMinted",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -425,7 +277,6 @@ export interface NeuronsInterface extends Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 }
 
 export namespace ApprovalEvent {
@@ -446,12 +297,12 @@ export namespace ApprovalEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace BurnerUpdatedEvent {
-  export type InputTuple = [burner: AddressLike, allowed: boolean];
-  export type OutputTuple = [burner: string, allowed: boolean];
+export namespace BridgeUpdatedEvent {
+  export type InputTuple = [oldBridge: AddressLike, newBridge: AddressLike];
+  export type OutputTuple = [oldBridge: string, newBridge: string];
   export interface OutputObject {
-    burner: string;
-    allowed: boolean;
+    oldBridge: string;
+    newBridge: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -513,131 +364,12 @@ export namespace EIP712DomainChangedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace MinterUpdatedEvent {
-  export type InputTuple = [minter: AddressLike, allowed: boolean];
-  export type OutputTuple = [minter: string, allowed: boolean];
-  export interface OutputObject {
-    minter: string;
-    allowed: boolean;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
 export namespace OwnershipTransferredEvent {
   export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
   export type OutputTuple = [previousOwner: string, newOwner: string];
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace PausedEvent {
-  export type InputTuple = [account: AddressLike];
-  export type OutputTuple = [account: string];
-  export interface OutputObject {
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace RoleAdminChangedEvent {
-  export type InputTuple = [
-    role: BytesLike,
-    previousAdminRole: BytesLike,
-    newAdminRole: BytesLike
-  ];
-  export type OutputTuple = [
-    role: string,
-    previousAdminRole: string,
-    newAdminRole: string
-  ];
-  export interface OutputObject {
-    role: string;
-    previousAdminRole: string;
-    newAdminRole: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace RoleGrantedEvent {
-  export type InputTuple = [
-    role: BytesLike,
-    account: AddressLike,
-    sender: AddressLike
-  ];
-  export type OutputTuple = [role: string, account: string, sender: string];
-  export interface OutputObject {
-    role: string;
-    account: string;
-    sender: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace RoleRevokedEvent {
-  export type InputTuple = [
-    role: BytesLike,
-    account: AddressLike,
-    sender: AddressLike
-  ];
-  export type OutputTuple = [role: string, account: string, sender: string];
-  export interface OutputObject {
-    role: string;
-    account: string;
-    sender: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace TokensBurnedEvent {
-  export type InputTuple = [
-    from: AddressLike,
-    amount: BigNumberish,
-    burner: AddressLike
-  ];
-  export type OutputTuple = [from: string, amount: bigint, burner: string];
-  export interface OutputObject {
-    from: string;
-    amount: bigint;
-    burner: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace TokensMintedEvent {
-  export type InputTuple = [
-    to: AddressLike,
-    amount: BigNumberish,
-    minter: AddressLike
-  ];
-  export type OutputTuple = [to: string, amount: bigint, minter: string];
-  export interface OutputObject {
-    to: string;
-    amount: bigint;
-    minter: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -663,23 +395,11 @@ export namespace TransferEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace UnpausedEvent {
-  export type InputTuple = [account: AddressLike];
-  export type OutputTuple = [account: string];
-  export interface OutputObject {
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export interface Neurons extends BaseContract {
-  connect(runner?: ContractRunner | null): Neurons;
+export interface NeuronsProxy extends BaseContract {
+  connect(runner?: ContractRunner | null): NeuronsProxy;
   waitForDeployment(): Promise<this>;
 
-  interface: NeuronsInterface;
+  interface: NeuronsProxyInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -718,17 +438,9 @@ export interface Neurons extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  BURNER_ROLE: TypedContractMethod<[], [string], "view">;
-
   CLOCK_MODE: TypedContractMethod<[], [string], "view">;
 
-  DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
-
   DOMAIN_SEPARATOR: TypedContractMethod<[], [string], "view">;
-
-  MAX_SUPPLY: TypedContractMethod<[], [bigint], "view">;
-
-  MINTER_ROLE: TypedContractMethod<[], [string], "view">;
 
   allowance: TypedContractMethod<
     [owner: AddressLike, spender: AddressLike],
@@ -744,21 +456,19 @@ export interface Neurons extends BaseContract {
 
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
-  batchMint: TypedContractMethod<
-    [recipients: AddressLike[], amounts: BigNumberish[]],
+  bridge: TypedContractMethod<[], [string], "view">;
+
+  bridgeBurn: TypedContractMethod<
+    [from: AddressLike, amount: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  burn: TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
-
-  burnFrom: TypedContractMethod<
-    [account: AddressLike, amount: BigNumberish],
+  bridgeMint: TypedContractMethod<
+    [to: AddressLike, amount: BigNumberish],
     [void],
     "nonpayable"
   >;
-
-  cap: TypedContractMethod<[], [bigint], "view">;
 
   checkpoints: TypedContractMethod<
     [account: AddressLike, pos: BigNumberish],
@@ -821,35 +531,11 @@ export interface Neurons extends BaseContract {
     "view"
   >;
 
-  getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], "view">;
-
   getVotes: TypedContractMethod<[account: AddressLike], [bigint], "view">;
-
-  grantRole: TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-
-  hasRole: TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [boolean],
-    "view"
-  >;
 
   increaseAllowance: TypedContractMethod<
     [spender: AddressLike, addedValue: BigNumberish],
     [boolean],
-    "nonpayable"
-  >;
-
-  isBurner: TypedContractMethod<[account: AddressLike], [boolean], "view">;
-
-  isMinter: TypedContractMethod<[account: AddressLike], [boolean], "view">;
-
-  mint: TypedContractMethod<
-    [to: AddressLike, amount: BigNumberish],
-    [void],
     "nonpayable"
   >;
 
@@ -860,10 +546,6 @@ export interface Neurons extends BaseContract {
   numCheckpoints: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
   owner: TypedContractMethod<[], [string], "view">;
-
-  pause: TypedContractMethod<[], [void], "nonpayable">;
-
-  paused: TypedContractMethod<[], [boolean], "view">;
 
   permit: TypedContractMethod<
     [
@@ -879,45 +561,11 @@ export interface Neurons extends BaseContract {
     "nonpayable"
   >;
 
-  remainingSupply: TypedContractMethod<[], [bigint], "view">;
-
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
-  renounceRole: TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-
-  revokeRole: TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-
-  setBurner: TypedContractMethod<
-    [burner: AddressLike, allowed: boolean],
-    [void],
-    "nonpayable"
-  >;
-
-  setMinter: TypedContractMethod<
-    [minter: AddressLike, allowed: boolean],
-    [void],
-    "nonpayable"
-  >;
-
-  supportsInterface: TypedContractMethod<
-    [interfaceId: BytesLike],
-    [boolean],
-    "view"
-  >;
+  setBridge: TypedContractMethod<[bridge_: AddressLike], [void], "nonpayable">;
 
   symbol: TypedContractMethod<[], [string], "view">;
-
-  totalBurned: TypedContractMethod<[], [bigint], "view">;
-
-  totalMinted: TypedContractMethod<[], [bigint], "view">;
 
   totalSupply: TypedContractMethod<[], [bigint], "view">;
 
@@ -939,29 +587,15 @@ export interface Neurons extends BaseContract {
     "nonpayable"
   >;
 
-  unpause: TypedContractMethod<[], [void], "nonpayable">;
-
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
   getFunction(
-    nameOrSignature: "BURNER_ROLE"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "CLOCK_MODE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "DEFAULT_ADMIN_ROLE"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "DOMAIN_SEPARATOR"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "MAX_SUPPLY"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "MINTER_ROLE"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "allowance"
@@ -981,25 +615,22 @@ export interface Neurons extends BaseContract {
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "batchMint"
+    nameOrSignature: "bridge"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "bridgeBurn"
   ): TypedContractMethod<
-    [recipients: AddressLike[], amounts: BigNumberish[]],
+    [from: AddressLike, amount: BigNumberish],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "burn"
-  ): TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "burnFrom"
+    nameOrSignature: "bridgeMint"
   ): TypedContractMethod<
-    [account: AddressLike, amount: BigNumberish],
+    [to: AddressLike, amount: BigNumberish],
     [void],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "cap"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "checkpoints"
   ): TypedContractMethod<
@@ -1068,43 +699,13 @@ export interface Neurons extends BaseContract {
     "view"
   >;
   getFunction(
-    nameOrSignature: "getRoleAdmin"
-  ): TypedContractMethod<[role: BytesLike], [string], "view">;
-  getFunction(
     nameOrSignature: "getVotes"
   ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "grantRole"
-  ): TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "hasRole"
-  ): TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [boolean],
-    "view"
-  >;
   getFunction(
     nameOrSignature: "increaseAllowance"
   ): TypedContractMethod<
     [spender: AddressLike, addedValue: BigNumberish],
     [boolean],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "isBurner"
-  ): TypedContractMethod<[account: AddressLike], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "isMinter"
-  ): TypedContractMethod<[account: AddressLike], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "mint"
-  ): TypedContractMethod<
-    [to: AddressLike, amount: BigNumberish],
-    [void],
     "nonpayable"
   >;
   getFunction(
@@ -1119,12 +720,6 @@ export interface Neurons extends BaseContract {
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "pause"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "paused"
-  ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
     nameOrSignature: "permit"
   ): TypedContractMethod<
@@ -1141,51 +736,14 @@ export interface Neurons extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "remainingSupply"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "renounceRole"
-  ): TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "revokeRole"
-  ): TypedContractMethod<
-    [role: BytesLike, account: AddressLike],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "setBurner"
-  ): TypedContractMethod<
-    [burner: AddressLike, allowed: boolean],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "setMinter"
-  ): TypedContractMethod<
-    [minter: AddressLike, allowed: boolean],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "supportsInterface"
-  ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+    nameOrSignature: "setBridge"
+  ): TypedContractMethod<[bridge_: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "symbol"
   ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "totalBurned"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "totalMinted"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "totalSupply"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -1206,9 +764,6 @@ export interface Neurons extends BaseContract {
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "unpause"
-  ): TypedContractMethod<[], [void], "nonpayable">;
 
   getEvent(
     key: "Approval"
@@ -1218,11 +773,11 @@ export interface Neurons extends BaseContract {
     ApprovalEvent.OutputObject
   >;
   getEvent(
-    key: "BurnerUpdated"
+    key: "BridgeUpdated"
   ): TypedContractEvent<
-    BurnerUpdatedEvent.InputTuple,
-    BurnerUpdatedEvent.OutputTuple,
-    BurnerUpdatedEvent.OutputObject
+    BridgeUpdatedEvent.InputTuple,
+    BridgeUpdatedEvent.OutputTuple,
+    BridgeUpdatedEvent.OutputObject
   >;
   getEvent(
     key: "DelegateChanged"
@@ -1246,13 +801,6 @@ export interface Neurons extends BaseContract {
     EIP712DomainChangedEvent.OutputObject
   >;
   getEvent(
-    key: "MinterUpdated"
-  ): TypedContractEvent<
-    MinterUpdatedEvent.InputTuple,
-    MinterUpdatedEvent.OutputTuple,
-    MinterUpdatedEvent.OutputObject
-  >;
-  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
@@ -1260,60 +808,11 @@ export interface Neurons extends BaseContract {
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
-    key: "Paused"
-  ): TypedContractEvent<
-    PausedEvent.InputTuple,
-    PausedEvent.OutputTuple,
-    PausedEvent.OutputObject
-  >;
-  getEvent(
-    key: "RoleAdminChanged"
-  ): TypedContractEvent<
-    RoleAdminChangedEvent.InputTuple,
-    RoleAdminChangedEvent.OutputTuple,
-    RoleAdminChangedEvent.OutputObject
-  >;
-  getEvent(
-    key: "RoleGranted"
-  ): TypedContractEvent<
-    RoleGrantedEvent.InputTuple,
-    RoleGrantedEvent.OutputTuple,
-    RoleGrantedEvent.OutputObject
-  >;
-  getEvent(
-    key: "RoleRevoked"
-  ): TypedContractEvent<
-    RoleRevokedEvent.InputTuple,
-    RoleRevokedEvent.OutputTuple,
-    RoleRevokedEvent.OutputObject
-  >;
-  getEvent(
-    key: "TokensBurned"
-  ): TypedContractEvent<
-    TokensBurnedEvent.InputTuple,
-    TokensBurnedEvent.OutputTuple,
-    TokensBurnedEvent.OutputObject
-  >;
-  getEvent(
-    key: "TokensMinted"
-  ): TypedContractEvent<
-    TokensMintedEvent.InputTuple,
-    TokensMintedEvent.OutputTuple,
-    TokensMintedEvent.OutputObject
-  >;
-  getEvent(
     key: "Transfer"
   ): TypedContractEvent<
     TransferEvent.InputTuple,
     TransferEvent.OutputTuple,
     TransferEvent.OutputObject
-  >;
-  getEvent(
-    key: "Unpaused"
-  ): TypedContractEvent<
-    UnpausedEvent.InputTuple,
-    UnpausedEvent.OutputTuple,
-    UnpausedEvent.OutputObject
   >;
 
   filters: {
@@ -1328,15 +827,15 @@ export interface Neurons extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
-    "BurnerUpdated(address,bool)": TypedContractEvent<
-      BurnerUpdatedEvent.InputTuple,
-      BurnerUpdatedEvent.OutputTuple,
-      BurnerUpdatedEvent.OutputObject
+    "BridgeUpdated(address,address)": TypedContractEvent<
+      BridgeUpdatedEvent.InputTuple,
+      BridgeUpdatedEvent.OutputTuple,
+      BridgeUpdatedEvent.OutputObject
     >;
-    BurnerUpdated: TypedContractEvent<
-      BurnerUpdatedEvent.InputTuple,
-      BurnerUpdatedEvent.OutputTuple,
-      BurnerUpdatedEvent.OutputObject
+    BridgeUpdated: TypedContractEvent<
+      BridgeUpdatedEvent.InputTuple,
+      BridgeUpdatedEvent.OutputTuple,
+      BridgeUpdatedEvent.OutputObject
     >;
 
     "DelegateChanged(address,address,address)": TypedContractEvent<
@@ -1372,17 +871,6 @@ export interface Neurons extends BaseContract {
       EIP712DomainChangedEvent.OutputObject
     >;
 
-    "MinterUpdated(address,bool)": TypedContractEvent<
-      MinterUpdatedEvent.InputTuple,
-      MinterUpdatedEvent.OutputTuple,
-      MinterUpdatedEvent.OutputObject
-    >;
-    MinterUpdated: TypedContractEvent<
-      MinterUpdatedEvent.InputTuple,
-      MinterUpdatedEvent.OutputTuple,
-      MinterUpdatedEvent.OutputObject
-    >;
-
     "OwnershipTransferred(address,address)": TypedContractEvent<
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
@@ -1394,72 +882,6 @@ export interface Neurons extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "Paused(address)": TypedContractEvent<
-      PausedEvent.InputTuple,
-      PausedEvent.OutputTuple,
-      PausedEvent.OutputObject
-    >;
-    Paused: TypedContractEvent<
-      PausedEvent.InputTuple,
-      PausedEvent.OutputTuple,
-      PausedEvent.OutputObject
-    >;
-
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": TypedContractEvent<
-      RoleAdminChangedEvent.InputTuple,
-      RoleAdminChangedEvent.OutputTuple,
-      RoleAdminChangedEvent.OutputObject
-    >;
-    RoleAdminChanged: TypedContractEvent<
-      RoleAdminChangedEvent.InputTuple,
-      RoleAdminChangedEvent.OutputTuple,
-      RoleAdminChangedEvent.OutputObject
-    >;
-
-    "RoleGranted(bytes32,address,address)": TypedContractEvent<
-      RoleGrantedEvent.InputTuple,
-      RoleGrantedEvent.OutputTuple,
-      RoleGrantedEvent.OutputObject
-    >;
-    RoleGranted: TypedContractEvent<
-      RoleGrantedEvent.InputTuple,
-      RoleGrantedEvent.OutputTuple,
-      RoleGrantedEvent.OutputObject
-    >;
-
-    "RoleRevoked(bytes32,address,address)": TypedContractEvent<
-      RoleRevokedEvent.InputTuple,
-      RoleRevokedEvent.OutputTuple,
-      RoleRevokedEvent.OutputObject
-    >;
-    RoleRevoked: TypedContractEvent<
-      RoleRevokedEvent.InputTuple,
-      RoleRevokedEvent.OutputTuple,
-      RoleRevokedEvent.OutputObject
-    >;
-
-    "TokensBurned(address,uint256,address)": TypedContractEvent<
-      TokensBurnedEvent.InputTuple,
-      TokensBurnedEvent.OutputTuple,
-      TokensBurnedEvent.OutputObject
-    >;
-    TokensBurned: TypedContractEvent<
-      TokensBurnedEvent.InputTuple,
-      TokensBurnedEvent.OutputTuple,
-      TokensBurnedEvent.OutputObject
-    >;
-
-    "TokensMinted(address,uint256,address)": TypedContractEvent<
-      TokensMintedEvent.InputTuple,
-      TokensMintedEvent.OutputTuple,
-      TokensMintedEvent.OutputObject
-    >;
-    TokensMinted: TypedContractEvent<
-      TokensMintedEvent.InputTuple,
-      TokensMintedEvent.OutputTuple,
-      TokensMintedEvent.OutputObject
-    >;
-
     "Transfer(address,address,uint256)": TypedContractEvent<
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
@@ -1469,17 +891,6 @@ export interface Neurons extends BaseContract {
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
       TransferEvent.OutputObject
-    >;
-
-    "Unpaused(address)": TypedContractEvent<
-      UnpausedEvent.InputTuple,
-      UnpausedEvent.OutputTuple,
-      UnpausedEvent.OutputObject
-    >;
-    Unpaused: TypedContractEvent<
-      UnpausedEvent.InputTuple,
-      UnpausedEvent.OutputTuple,
-      UnpausedEvent.OutputObject
     >;
   };
 }
