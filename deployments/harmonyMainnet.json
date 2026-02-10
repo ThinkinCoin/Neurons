@@ -2,7 +2,7 @@
   "schema": "neurons.deployments.v1",
   "network": "harmonyMainnet",
   "chainId": 1666600000,
-  "timestamp": "2025-12-31T21:07:04.639Z",
+  "timestamp": "2025-12-31T22:20:06.591Z",
   "deployer": "0xF59de020d650E69eF0755Bf37F3D16B80Ee132F5",
   "contracts": {
     "Neurons": {
@@ -12,6 +12,28 @@
       "blockNumber": 83137279,
       "constructorArgs": [
         "0xF59de020d650E69eF0755Bf37F3D16B80Ee132F5"
+      ]
+    },
+    "ECDSAVerifier": {
+      "name": "ECDSAVerifier",
+      "address": "0x7aa6CAfd21E2Ce97c8EB07f75956d225a0A0CB86",
+      "txHash": "0xb0ec9744b8797810681c1251098147cc3a8b562aff1f7994bb4fa51fd4dff951",
+      "blockNumber": 83139455,
+      "constructorArgs": [
+        "0x76B83B6148ccA891D768cE3129585F25d0104783",
+        "0x45B96eD5d5B18f4f865266D8371C662Cd241e6D5"
+      ]
+    },
+    "PoKMinter": {
+      "name": "PoKMinter",
+      "address": "0x1C2cd6311AAba01103E2Db5CB49d1A6dD245404A",
+      "txHash": "0x20af09ed2ca85dff13142fd424075ae2bc7e18ac3c3308b9f0cdd2dd61918836",
+      "blockNumber": 83139459,
+      "constructorArgs": [
+        "0x76B83B6148ccA891D768cE3129585F25d0104783",
+        "0xA4A72cB0C1cdE087B40d79F28f559B047Df1760f",
+        "0x7aa6CAfd21E2Ce97c8EB07f75956d225a0A0CB86",
+        "0x76B83B6148ccA891D768cE3129585F25d0104783"
       ]
     }
   }

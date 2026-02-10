@@ -5,6 +5,8 @@ node_modules
 .env.*
 cache
 dist
+Agents
+
 
 #Ignore vscode AI rules
 .github\instructions\codacy.instructions.md
