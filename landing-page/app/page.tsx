@@ -328,7 +328,7 @@ export default function Home() {
                 <GithubIcon /> Explore repository <Arrow />
               </a>
               <a
-                className="text-link"
+                className="button button-secondary"
                 href="https://docs.axodus.country/tokenomics/overview"
                 target="_blank"
                 rel="noreferrer"
