@@ -569,7 +569,7 @@ nav a:focus-visible::after {
 
 .metric-primary {
   background: #49d5f5;
-  border-color: var(--acid) !important;
+  
 }
 
 .tokenomics-note {
