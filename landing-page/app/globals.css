@@ -293,7 +293,7 @@ nav a:focus-visible::after {
 .hero-telemetry span,
 .hero-telemetry strong {
   display: block;
-  font-size: 0.58rem;
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
 }
@@ -779,7 +779,7 @@ footer {
 .footer-links a,
 .footer-meta span {
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 12px;
 }
 
 .footer-links a:hover {

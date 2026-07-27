@@ -21,7 +21,7 @@ export default function Home() {
             height={33}
             priority
           />
-          <span><b>$</b>Neurons</span>
+          <span>Neurons</span>
         </a>
         <nav aria-label="Primary navigation">
           <a href="#overview">Overview</a>
@@ -44,13 +44,7 @@ export default function Home() {
         <div className="hero-network" aria-hidden="true" />
         <div className="hero-copy">
           <div className="hero-brand" aria-hidden="true">
-            <Image
-              src="/assets/neurons-logo.svg"
-              alt=""
-              width={72}
-              height={74}
-              priority
-            />
+
             <span>Axodus knowledge layer / $Neurons</span>
           </div>
           <h1>
@@ -373,7 +367,7 @@ export default function Home() {
               width={32}
               height={33}
             />
-            <span><b>$</b>Neurons</span>
+            <span>Neurons</span>
           </a>
           <p>A Proof-of-Knowledge token for the Axodus ecosystem.</p>
           <a
