@@ -91,7 +91,7 @@ export default function Home() {
       </section>
 
       <section className="section intro-section" id="overview">
-        <div className="section-index">01 / Overview</div>
+        <div className="section-index">Overview</div>
         <div className="intro-grid">
           <h2>Not speculation. A signal of demonstrated knowledge.</h2>
           <div className="prose-large">
@@ -109,7 +109,7 @@ export default function Home() {
         </div>
         <div className="principles">
           <article>
-            <span>01</span>
+            
             <h3>Knowledge-first issuance</h3>
             <p>
               Rewards begin with a validated learning event, not a purchase
@@ -117,7 +117,7 @@ export default function Home() {
             </p>
           </article>
           <article>
-            <span>02</span>
+            
             <h3>Verifiable by design</h3>
             <p>
               Structured signatures connect off-chain achievement records to
@@ -125,7 +125,7 @@ export default function Home() {
             </p>
           </article>
           <article>
-            <span>03</span>
+            
             <h3>Bounded supply</h3>
             <p>
               The ERC-20 contract enforces a maximum supply of 10 million
@@ -150,7 +150,7 @@ export default function Home() {
         </div>
         <div className="pipeline">
           <article>
-            <span className="node-number">01</span>
+           
             <div className="node-icon">L</div>
             <h3>Learn</h3>
             <p>
@@ -159,7 +159,7 @@ export default function Home() {
             </p>
           </article>
           <article>
-            <span className="node-number">02</span>
+           
             <div className="node-icon">V</div>
             <h3>Verify</h3>
             <p>
@@ -168,7 +168,7 @@ export default function Home() {
             </p>
           </article>
           <article>
-            <span className="node-number">03</span>
+            
             <div className="node-icon">M</div>
             <h3>Mint</h3>
             <p>
@@ -177,7 +177,7 @@ export default function Home() {
             </p>
           </article>
           <article>
-            <span className="node-number">04</span>
+            
             <div className="node-icon">N</div>
             <h3>Recognize</h3>
             <p>
@@ -189,7 +189,7 @@ export default function Home() {
       </section>
 
       <section className="section architecture-section">
-        <div className="section-index">03 / Protocol architecture</div>
+        <div className="section-index">Protocol architecture</div>
         <div className="architecture-grid">
           <div className="architecture-title">
             <p className="kicker">Separation of concerns</p>
@@ -201,7 +201,7 @@ export default function Home() {
           </div>
           <div className="module-stack">
             <article>
-              <span>CORE / 01</span>
+              <span>CORE /</span>
               <div>
                 <h3>Neurons.sol</h3>
                 <p>ERC-20 core, capped supply, roles, pause and permit.</p>
@@ -209,7 +209,7 @@ export default function Home() {
               <strong>Live code</strong>
             </article>
             <article>
-              <span>MINT / 02</span>
+              <span>MINT /</span>
               <div>
                 <h3>PoKMinter.sol</h3>
                 <p>Signature checks, nonce protection and issuance limits.</p>
@@ -217,7 +217,7 @@ export default function Home() {
               <strong>Live code</strong>
             </article>
             <article>
-              <span>AUTH / 03</span>
+              <span>AUTH /</span>
               <div>
                 <h3>ECDSAVerifier.sol</h3>
                 <p>EIP-712 structured verification and signer control.</p>
@@ -225,7 +225,7 @@ export default function Home() {
               <strong>Live code</strong>
             </article>
             <article>
-              <span>BRIDGE / 04</span>
+              <span>BRIDGE /</span>
               <div>
                 <h3>NeuronsOFTAdapter.sol</h3>
                 <p>Cross-chain adapter concept for future LayerZero support.</p>
@@ -237,7 +237,7 @@ export default function Home() {
       </section>
 
       <section className="section tokenomics-section" id="tokenomics">
-        <div className="section-index">04 / Tokenomics</div>
+        <div className="section-index">Tokenomics</div>
         <div className="tokenomics-heading">
           <h2>Programmed scarcity.<br />Measured issuance.</h2>
           <p>
@@ -278,7 +278,7 @@ export default function Home() {
       </section>
 
       <section className="section security-section">
-        <div className="section-index">05 / Controls</div>
+        <div className="section-index">Controls</div>
         <div className="security-grid">
           <div>
             <p className="kicker">Security posture</p>
@@ -294,7 +294,7 @@ export default function Home() {
               ["Reentrancy protection", "Guarded mint execution paths."],
             ].map(([title, text], index) => (
               <article key={title}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{"=>>"}</span>
                 <div>
                   <h3>{title}</h3>
                   <p>{text}</p>
@@ -306,7 +306,7 @@ export default function Home() {
       </section>
 
       <section className="section development-section" id="development">
-        <div className="section-index">06 / Open development</div>
+        <div className="section-index">Open development</div>
         <div className="development-card">
           <div className="development-copy">
             <span className="live-label">
@@ -328,7 +328,7 @@ export default function Home() {
                 <GithubIcon /> Explore repository <Arrow />
               </a>
               <a
-                className="text-link"
+                className="button button-secondary"
                 href="https://docs.axodus.country/tokenomics/overview"
                 target="_blank"
                 rel="noreferrer"

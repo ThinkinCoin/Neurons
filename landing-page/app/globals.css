@@ -195,7 +195,7 @@ nav a:focus-visible::after {
 .kicker,
 .section-index {
   color: var(--acid);
-  font-size: 0.67rem;
+  font-size: 12px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
@@ -418,9 +418,9 @@ nav a:focus-visible::after {
   background: var(--line-light);
   content: "";
   height: 1px;
-  left: 10%;
+  left: 11%;
   position: absolute;
-  right: 10%;
+  right: 11%;
   top: 76px;
 }
 
@@ -445,7 +445,7 @@ nav a:focus-visible::after {
   font-size: 0.76rem;
   height: 50px;
   justify-content: center;
-  margin-top: 1.7rem;
+  margin: 1.7rem auto;
   position: relative;
   width: 50px;
   z-index: 2;
@@ -569,7 +569,7 @@ nav a:focus-visible::after {
 
 .metric-primary {
   background: #49d5f5;
-  border-color: var(--acid) !important;
+  
 }
 
 .tokenomics-note {
