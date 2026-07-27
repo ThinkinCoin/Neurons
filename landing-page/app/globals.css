@@ -195,7 +195,7 @@ nav a:focus-visible::after {
 .kicker,
 .section-index {
   color: var(--acid);
-  font-size: 0.67rem;
+  font-size: 12px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
