@@ -6,7 +6,11 @@
   "scripts": {
     "build": "hardhat compile",
     "test": "hardhat test",
-    "clean": "hardhat clean"
+    "clean": "hardhat clean",
+    "build:manifest": "node scripts/build/build-runner.js",
+    "verify:manifest": "node scripts/verify/verify-runner.js",
+    "generate:sbom": "node scripts/build/sbom-generator.js",
+    "verify:reproduce": "node scripts/verify/independent-reproduction.js"
   },
   "engines": {
     "node": ">=20 <25"

@@ -14,8 +14,8 @@ NEURONS is currently under active development. No production-ready release has b
 
 | Version / Branch | Security Support |
 | --- | --- |
-| `canonical/dev` (unreleased) | Active development and security review; not production-supported |
-| `dev` (historical implementation) | Unsupported |
+| `dev` (unreleased canonical) | Active development and security review; not production-supported |
+| `legacy` (historical implementation) | Unsupported |
 | Historical Harmony contracts | Unsupported |
 | Official production releases | None published |
 

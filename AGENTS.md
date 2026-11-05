@@ -1,6 +1,6 @@
 # Canonical NEURONS branch guidance
 
-`canonical/dev` is an orphan greenfield branch. The repository's `dev` branch preserves historical Harmony-era reference material and is not a source dependency of this branch.
+`dev` is the active canonical development branch for the greenfield NEURONS foundation. The historical Harmony-era implementation is preserved in the `legacy` branch and is not a source dependency of this branch.
 
 Production candidates live in `contracts/src/`. Test-only fixtures and endpoint harnesses live in `contracts/test/`; they must not be deployed or imported by production contracts. Tests live in `test/`.
 

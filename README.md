@@ -1,6 +1,6 @@
 # NEURONS canonical source
 
-This orphan branch contains the greenfield NEURONS foundation. The repository's `dev` branch is historical reference material and is not a dependency of this source tree.
+This branch (`dev`) contains the canonical greenfield NEURONS foundation. The repository's historical Harmony-era implementation is preserved on the `legacy` branch and is not a dependency of this source tree.
 
 The current scope provides an abstract Native LayerZero OFT core with ERC-20 Permit, ERC20Votes, EIP-6372 timestamp checkpoints, and strict representability checks before OFT debit. It deliberately excludes deployment configuration, production supply, peer selection, election logic, escrow, census, pausing, proxy upgradeability, and generic mint/burn administration.
 

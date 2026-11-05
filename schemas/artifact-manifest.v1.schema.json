@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "neurons.build-manifest/v1",
+  "title": "NEURONS Canonical Build Manifest Schema v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source",
+    "environment",
+    "dependencies",
+    "compiler",
+    "artifacts",
+    "tests",
+    "verification",
+    "classification"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "neurons.build-manifest/v1"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "branch",
+        "commit_sha",
+        "worktree_clean",
+        "source_tree_fingerprint"
+      ],
+      "properties": {
+        "repository": { "type": "string" },
+        "branch": { "type": "string" },
+        "commit_sha": { "type": "string" },
+        "worktree_clean": { "type": "boolean" },
+        "source_tree_fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "node_version",
+        "npm_version",
+        "os",
+        "architecture",
+        "isolation_profile"
+      ],
+      "properties": {
+        "node_version": { "type": "string" },
+        "npm_version": { "type": "string" },
+        "os": { "type": "string" },
+        "architecture": { "type": "string" },
+        "isolation_profile": { "type": "string" }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "required": [
+        "package_manifest_sha256",
+        "package_lock_sha256",
+        "installed_profile",
+        "dependency_inventory_sha256"
+      ],
+      "properties": {
+        "package_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "package_lock_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "installed_profile": { "type": "string" },
+        "dependency_inventory_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "compiler": {
+      "type": "object",
+      "required": [
+        "solc_version",
+        "solc_binary_sha256",
+        "optimizer_enabled",
+        "optimizer_runs",
+        "evm_target",
+        "settings_sha256"
+      ],
+      "properties": {
+        "solc_version": { "type": "string" },
+        "solc_binary_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "optimizer_enabled": { "type": "boolean" },
+        "optimizer_runs": { "type": "integer" },
+        "evm_target": { "type": "string" },
+        "settings_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "required": [
+        "manifest_entries",
+        "artifacts_root_fingerprint"
+      ],
+      "properties": {
+        "artifacts_root_fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "manifest_entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "contract_name",
+              "source_path",
+              "fully_qualified_name",
+              "compiler_version",
+              "abi_sha256",
+              "creation_bytecode_sha256",
+              "runtime_bytecode_sha256",
+              "classification"
+            ],
+            "properties": {
+              "contract_name": { "type": "string" },
+              "source_path": { "type": "string" },
+              "fully_qualified_name": { "type": "string" },
+              "compiler_version": { "type": "string" },
+              "abi_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "creation_bytecode_sha256": { "type": "string", "pattern": "^([0-9a-f]{64}|EMPTY)$" },
+              "runtime_bytecode_sha256": { "type": "string", "pattern": "^([0-9a-f]{64}|EMPTY)$" },
+              "classification": {
+                "type": "string",
+                "enum": [
+                  "PRODUCTION_ABSTRACT",
+                  "PRODUCTION_DEPLOYABLE_CANDIDATE",
+                  "TEST_ONLY_DEPLOYABLE",
+                  "INTERFACE_ONLY",
+                  "SUPPORT_LIBRARY"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "required": [
+        "executed",
+        "passed",
+        "failed",
+        "skipped"
+      ],
+      "properties": {
+        "executed": { "type": "integer", "minimum": 0 },
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "schema_validation",
+        "independent_reproduction",
+        "result"
+      ],
+      "properties": {
+        "schema_validation": { "type": "string" },
+        "independent_reproduction": { "type": "string" },
+        "result": { "type": "string" }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": [
+        "build_status",
+        "artifact_status",
+        "release_status",
+        "deployment_status"
+      ],
+      "properties": {
+        "build_status": { "type": "string" },
+        "artifact_status": { "type": "string" },
+        "release_status": { "type": "string", "const": "NOT_AUTHORIZED" },
+        "deployment_status": { "type": "string", "const": "NOT_AUTHORIZED" }
+      }
+    }
+  }
+}
